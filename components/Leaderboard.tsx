@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { LeaderboardItem } from "@/lib/clicker-anchor-client";
 import { displayShortPublicKey } from "@/lib/utils";
+import axios from "axios";
 
 type Props = {
   leaders: LeaderboardItem[];
-  walletPublicKeyString: string;
+  wallet: string;
   clicks: number;
 };
 
 export default function Leaderboard({
   leaders, // all games retrieved from Solana
-  walletPublicKeyString, // current player
+  wallet, // current player
   clicks, // current player's clicks
 }: Props) {
   const [displayLeaders, setDisplayLeaders] = useState<LeaderboardItem[]>([]);
@@ -20,28 +21,30 @@ export default function Leaderboard({
   useEffect(() => {
     let foundCurrentUser = false;
     const updatedLeaders = leaders.map((leader) => {
-      if (leader.playerPublicKey === walletPublicKeyString) {
-        foundCurrentUser = true;
-        return {
-          playerPublicKey: leader.playerPublicKey,
-          clicks: clicks,
-        };
-      }
+      return {
+        wallet: leader.wallet,
+        clicks: leader.clicks,
+      };
+      // if (leader.playerPublicKey === walletPublicKeyString) {
+      //   foundCurrentUser = true;
+      // }
       return leader;
     });
 
     // if users first game (and they aren't in list of games retrieved) add 'em
-    if (walletPublicKeyString && clicks && !foundCurrentUser) {
+    // if (walletPublicKeyString && clicks && !foundCurrentUser) {
       updatedLeaders.push({
-        playerPublicKey: walletPublicKeyString,
+        wallet: wallet,
         clicks: clicks,
       });
-    }
+    // }
+
+
 
     // sort by leader
     const sortByClicks = updatedLeaders.sort((a, b) => b.clicks - a.clicks);
     setDisplayLeaders(sortByClicks);
-  }, [clicks, walletPublicKeyString, leaders]);
+  }, [clicks, wallet, leaders]);
 
   if (!displayLeaders.length) {
     return null;
@@ -64,10 +67,10 @@ export default function Leaderboard({
               <tr key={leader.playerPublicKey}>
                 <th className="text-center">{index + 1}</th>
                 <td className="text-center">
-                  {leader.playerPublicKey === walletPublicKeyString ? (
+                  {leader.wallet === wallet ? (
                     <b>You</b>
                   ) : (
-                    displayShortPublicKey(leader.playerPublicKey)
+                    displayShortPublicKey(leader.wallet)
                   )}
                 </td>
                 <td className="text-center">{leader.clicks}</td>

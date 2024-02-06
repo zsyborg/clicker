@@ -1,14 +1,19 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect, useMemo } from "react";
-
 import { clusterApiUrl } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
-
+import clientPromise from '../lib/mongodb';
+import { MongoClient } from 'mongodb';
+import NextCors from 'nextjs-cors';
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Leaderboard from "@/components/Leaderboard";
 import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
+import axios from "axios";
+import { map } from 'rxjs/operators';
+
+
 
 import {
   airdrop,
@@ -19,12 +24,17 @@ import {
 import FAQItem from "@/components/FaqItem";
 import ExternalLink from "@/components/ExternalLink";
 
+// const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
+const MONGODB_URI='mongodb://localhost:27017/?retryWrites=true&w=majority'
+
+
+
 const Home: NextPage = () => {
   const metaTitle = "Solana Clicker";
   const metaDescription =
-    "Solana Clicker is an open-source game being developed to learn and demonstrate techniques for integrating with Solana programs and Solana NFTs.";
-  const metaAbsoluteUrl = "https://solana-clicker.netlify.app/";
-  const metaImageUrl = "https://solana-clicker.netlify.app/home.png";
+    "Solana Clicker is an exciting ans simple clicker game to earn tokens. Just clickety click. Keep Clicking and keep earning!!!!";
+  const metaAbsoluteUrl = "https://solclicker.io/";
+  const metaImageUrl = "https://solclicker.io/home.png";
 
   const [clicks, setClicks] = useState(0);
   const [effect, setEffect] = useState(false);
@@ -34,12 +44,14 @@ const Home: NextPage = () => {
   const [gameError, setGameError] = useState("");
   const [gameAccountPublicKey, setGameAccountPublicKey] = useState("");
   const [leaders, setLeaders] = useState<LeaderboardItem[]>([]);
+  const [data, setData] = useState([]);
 
   const { connected } = useWallet();
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
   const wallet = useAnchorWallet();
   const [clickCount, setClickCount] = useState(0);
+  const [totalClick, settotalClick] = useState(0);
 
   async function handleClick() {
     setGameError("");
@@ -53,31 +65,140 @@ const Home: NextPage = () => {
       //     setGameError(e.message);
       //   }
       // }
-      setClickCount(clickCount + 1);
+     
+      
+      
+      axios.post('localhost:3000/api/users/check', {wallet: wallet.publicKey.toBase58()})
+      .then((response) => {
+        console.log(response)
+        setClickCount(clickCount + 1)
+        settotalClick(response.data.data.clicks)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      
+      let clkdata = {
+        wallet: wallet.publicKey.toBase58(),
+        clicks: totalClick + 1
+      };
+
+      console.log("PATCH Clicks + " + totalClick)
+
+      axios.patch('http://localhost:3000/api/users', clkdata)
+      .then((response) => {
+        console.log(response)
+        settotalClick(response.data.data.clicks)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    
+
+
     }
   }
 
   useEffect(() => {
     async function initGame() {
       if (wallet) {
-        const gameState = await getCurrentGame({ wallet, endpoint });
-        setIsGameReady(connected && gameState.isReady);
-        setClicks(gameState.clicks);
-        setGameAccountPublicKey(gameState.gameAccountPublicKey);
-        setSolanaExplorerLink(
-          `https://explorer.solana.com/address/${gameAccountPublicKey}/anchor-account?cluster=${network}`
-        );
-        setGameError(gameState.errorMessage);
+
+        let chkdata = {
+          wallet: wallet.publicKey?.toBase58(),
+        };
+        
+        
+        
+        
+        axios.post('http://localhost:3000/api/users/check', chkdata)
+        .then((response: any) => {
+          
+          settotalClick(response.data.data.clicks)
+          console.log("Total Clicks = " + response.data.data.clicks)
+          console.log("Current Click Count = " + clickCount)
+          
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+        
+        
+        // Create New User
+        
+        let newusrdata = {
+          wallet: wallet.publicKey?.toBase58(),
+          clicks: 0
+        };
+        axios.post('http://localhost:3000/api/users', newusrdata)
+        .then((response: any) => {
+          console.log(response)
+          
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+
+
+        
+        axios.get('http://localhost:3000/api/users')
+        .then((response: any) => {
+          console.log(response.data.data)
+          setData(response.data.data)
+          // data.map((item, index) => (
+          //   {item.wallet === wallet ? (
+          //     {setClickCount(item.clicks)}
+          //   ) : (
+          //     {item.wallet}
+          //   )}
+          // ))
+          
+          if (data.wallet === wallet.publicKey.toBase58()) {
+            setClickCount(data.clicks)
+            console.log("Total Clicks" + data.clicks)
+          }
+          
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+
+
+
+
+        
+        // const gameState = await getCurrentGame({ wallet, endpoint });
+        // setIsGameReady(connected && gameState.isReady);
+        // setClicks(gameState.clicks);
+        // setGameAccountPublicKey(gameState.gameAccountPublicKey);
+        // setSolanaExplorerLink(
+        //   `https://explorer.solana.com/address/${gameAccountPublicKey}/anchor-account?cluster=${network}`
+        // );
+        // setGameError(gameState.errorMessage);
       } else {
-        setIsGameReady(false);
-        setClicks(0);
-        setGameAccountPublicKey("");
-        setSolanaExplorerLink("");
-        setGameError("");
+        // setIsGameReady(false);
+        // setClicks(0);
+        // setGameAccountPublicKey("");
+        // setSolanaExplorerLink("");
+        // setGameError("");
       }
     }
     setIsConnected(connected);
     initGame();
+
+
+    // axios.get('http://localhost:3000/api/users/leaders')
+    // .then((response: any) => {
+    //   console.log(data)
+
+    // })
+    // .catch((error: any) => {
+    //   console.log(error);
+    // });
+
+
+
   }, [connected, endpoint, network, wallet, gameAccountPublicKey]);
 
   // airdrop test SOL if on devnet and player has less than 1 test SOL
@@ -93,14 +214,14 @@ const Home: NextPage = () => {
         }
       }
     }
-    fetchTestSol();
+    // fetchTestSol();
   }, [connected, wallet, endpoint]);
 
   // For leaderboard, persist expensive "retrieve all game data" via useState()
   useEffect(() => {
     (async function getLeaderboardData() {
       if (wallet) {
-        setLeaders(await getLeaderboard({ wallet, endpoint }));
+        // setLeaders(await getLeaderboard({ wallet, endpoint }));
       }
     })();
   }, [wallet, endpoint]);
@@ -129,9 +250,9 @@ const Home: NextPage = () => {
         <div>
           <WalletMultiButton />
         </div>
-        <div className="badge badge-accent badge-outline flex-none XXXml-2">
+        {/* <div className="badge badge-accent badge-outline flex-none XXXml-2">
           <a href="#devnet">devnet</a>
-        </div>
+        </div> */}
       </div>
 
       <div>
@@ -169,6 +290,7 @@ const Home: NextPage = () => {
                 </div>
               )}
             </div>
+            <p>Total Clicks {totalClick}</p>
             <button
               // disabled={!isGameReady}
               onClick={() => {
@@ -193,14 +315,14 @@ const Home: NextPage = () => {
                 on Solana.
               </div>
             )} */}
-
+{/* 
             {!isConnected && (
               <p className="p-2 text-center">
                 To play game, please click{" "}
                 <span className="font-bold">Select Wallet</span> above to choose
                 your Solana wallet.
               </p>
-            )}
+            )} */}
 
             {/* <p>
               See{" "}
@@ -209,20 +331,60 @@ const Home: NextPage = () => {
               </a>{" "}
               below for more information.
             </p> */}
-
+{/* 
             {!isGameReady && isConnected && (
               <div>
                 <p className="p-2">Game initializing...</p>
               </div>
-            )}
+            )} */}
           </div>
 
           {wallet && (
-            <Leaderboard
-              leaders={leaders}
-              walletPublicKeyString={wallet.publicKey.toBase58()}
-              clicks={clicks}
-            />
+            // <Leaderboard
+            //   leaders={leaders}
+            //   wallet={wallet.publicKey.toBase58()}
+            //   clicks={clicks}
+            // />
+
+            //////////////// 
+            // LeaderBoards
+            ////////////////
+            <div className="sm:p-10 items-center flex flex-col">
+            <div className="text-2xl mb-4">Leaderboard</div>
+            <div className="overflow-x-auto">
+              <table className="table table-zebra w-full">
+                <thead>
+                  <tr>
+                    <th className="text-center">Rank</th>
+                    <th className="text-center">Player</th>
+                    <th className="text-center">Total Clicks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((item, index) => (
+                    <tr key={item.wallet}>
+                      <th className="text-center">{index + 1}</th>
+                      <td className="text-center">
+                        {/* {item.wallet === wallet ? (
+                          <b>You</b>
+                          {settotalClick(item.clicks)}
+                        ) : (
+                          <p></p>
+                        )} */}
+                        <p>{item.wallet}</p>
+                      </td>
+                      <td className="text-center">{item.clicks}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+
+
+
           )}
         </div>
       </div>
@@ -234,19 +396,11 @@ const Home: NextPage = () => {
         <FAQItem faq="Is this a real game?">
           <>
             <p>
-              Yes, sort of. This game is being developed to learn and
-              demonstrate techniques for building apps that interact with Solana
-              programs and Solana NFTs. It&apos;s in the form of a game with
-              very simple rules.
+              Yes, it is!!. This game is being developed on Solana
+              Blockchain. It&apos;s in the form of a game with
+              very simple rules. Just keep Clicking. The wallet with most clicks wins a surprise prize!!!! the next 2 wallets will also receive our tokens as token of appreciation and hardwork of clicking!!!
             </p>
-            <p className="mt-3">
-              All code is available open-source at{" "}
-              <ExternalLink
-                href="https://github.com/briangershon/solana-clicker-game"
-                text="github.com/briangershon/solana-clicker-game"
-              />
-              . Please visit if you&apos;d like to learn more, or add features.
-            </p>
+           
           </>
         </FAQItem>
 
@@ -295,21 +449,9 @@ const Home: NextPage = () => {
               <span className="font-bold">select wallet</span> to connect and
               play.
             </p>
-            <p className="mt-3 text-secondary">
-              {" "}
-              <span>Important:</span>{" "}
-            </p>
+            
             <ul className="mt-3 list-disc ml-5 text-secondary">
-              <li>
-                This app is running on the Solana&apos;s{" "}
-                <span className="font-bold">devnet</span> chain and not the
-                default <span className="font-bold">mainnet</span>.
-              </li>
-              <li>
-                This means you don&apos;t need to buy real SOL. Instead this app
-                will automatically airdrop you one test SOL for free if you have
-                less than 1 test SOL in your wallet.
-              </li>
+              
               {/* <li>
                 You need to make one change in your wallet. You can still the
                 same same account as <span className="font-bold">mainnet</span>,
@@ -328,24 +470,7 @@ const Home: NextPage = () => {
         </FAQItem>
 
         <a id="devnet"></a>
-        <FAQItem faq="What is devnet?">
-          <>
-            <p>
-              Solana has two networks. <span className="font-bold">devnet</span>{" "}
-              is for experimentation and{" "}
-              <span className="font-bold">mainnet</span> is for production apps.
-              Currently this app is running on{" "}
-              <span className="font-bold">devnet</span>.
-            </p>
-            <p className="mt-3">
-              See &quot;
-              <a href="#wallet" className="underline">
-                How do I select a wallet and play the game?
-              </a>
-              &quot; FAQ for more info.
-            </p>
-          </>
-        </FAQItem>
+      
 
         <FAQItem faq="What is Solana?">
           <>
@@ -354,35 +479,7 @@ const Home: NextPage = () => {
             <ExternalLink href="https://solana.com/" text="solana.com" />)
           </>
         </FAQItem>
-        <FAQItem faq="How can I contribute to this open-source project?">
-          <p>
-            You can contribute in the form of feedback, marketing, design,
-            feature development, fixing bugs, or writing documentation. Please
-            visit our{" "}
-            <ExternalLink
-              href="https://github.com/briangershon/solana-clicker-game/issues"
-              text="issues board"
-            />{" "}
-            or{" "}
-            <ExternalLink
-              href="https://github.com/briangershon/solana-clicker-game/milestones"
-              text="milestones"
-            />
-            .
-          </p>
-        </FAQItem>
-        <FAQItem faq="How do I build my own application like this on Solana?">
-          <p>
-            This project is open-source and provides working examples of code
-            for building web apps that run on the Solana blockchain. Learn more
-            at{" "}
-            <ExternalLink
-              href="https://github.com/briangershon/solana-clicker-game"
-              text="github.com/briangershon/solana-clicker-game"
-            />
-            .
-          </p>
-        </FAQItem>
+        
       </footer>
     </div>
   );
