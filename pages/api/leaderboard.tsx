@@ -5,7 +5,8 @@ import Card, {Cards} from '../../models/Card'
 import clientPromise from '../../lib/mongodb'
 import { MongoClient } from 'mongodb'
 
-const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
+// const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
+const MONGODB_URI='mongodb+srv://indigoinsaan:RFbSu1c7gSBJCCm4@clicker.jnlxn1y.mongodb.net/?retryWrites=true&w=majority'
 
 async function listDatabases(client: MongoClient){
   const db = client.db('Grimace')
@@ -42,13 +43,13 @@ export default async function handler(
         res.status(400).json({ success: false })
       }
 
-      try {
-        const clt = new MongoClient(MONGODB_URI)
+      // try {
+      //   const clt = new MongoClient(MONGODB_URI)
 
-        res.status(201).json({ success: true, data: topUsers })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
+      //   res.status(201).json({ success: true, data: topUsers })
+      // } catch (error) {
+      //   res.status(400).json({ success: false })
+      // }
       break
     case 'POST':
       

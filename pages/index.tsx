@@ -8,7 +8,7 @@ import clientPromise from '../lib/mongodb';
 import { MongoClient } from 'mongodb';
 import NextCors from 'nextjs-cors';
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import Leaderboard from "@/components/Leaderboard";
+// import Leaderboard from "@/components/Leaderboard";
 import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
 import axios from "axios";
 import { map } from 'rxjs/operators';
@@ -73,6 +73,8 @@ const Home: NextPage = () => {
         console.log(response)
         setClickCount(clickCount + 1)
         settotalClick(response.data.data.clicks)
+        console.log(response.data.data)
+        console.log("Total Clicks" + totalClick)
       })
       .catch((error) => {
         console.log(error);
@@ -81,7 +83,7 @@ const Home: NextPage = () => {
       
       let clkdata = {
         wallet: wallet.publicKey.toBase58(),
-        clicks: totalClick + 1
+        clicks: totalClick + 1  
       };
 
       console.log("PATCH Clicks + " + totalClick)
@@ -154,10 +156,10 @@ const Home: NextPage = () => {
           //   )}
           // ))
           
-          if (data.wallet === wallet.publicKey.toBase58()) {
-            setClickCount(data.clicks)
-            console.log("Total Clicks" + data.clicks)
-          }
+          // if (data.wallet === wallet.publicKey.toBase58()) {
+          //   setClickCount(data.clicks)
+          //   console.log("Total Clicks" + data.clicks)
+          // }
           
         })
         .catch((error: any) => {
@@ -361,10 +363,11 @@ const Home: NextPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, index) => (
+                  {data.map((item:any, index:any) => (
                     <tr key={item.wallet}>
                       <th className="text-center">{index + 1}</th>
                       <td className="text-center">
+
                         {/* {item.wallet === wallet ? (
                           <b>You</b>
                           {settotalClick(item.clicks)}
