@@ -24,8 +24,8 @@ import {
 import FAQItem from "@/components/FaqItem";
 import ExternalLink from "@/components/ExternalLink";
 
-// const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
-const MONGODB_URI='mongodb://localhost:27017/?retryWrites=true&w=majority'
+const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
+// const MONGODB_URI='mongodb://localhost:27017/?retryWrites=true&w=majority'
 
 
 
@@ -68,7 +68,7 @@ const Home: NextPage = () => {
      
       
       
-      axios.post('localhost:3000/api/users/check', {wallet: wallet.publicKey.toBase58()})
+      axios.post('https://clicker-eta.vercel.app/api/users/check', {wallet: wallet.publicKey.toBase58()})
       .then((response) => {
         console.log(response)
         setClickCount(clickCount + 1)
@@ -88,7 +88,7 @@ const Home: NextPage = () => {
 
       console.log("PATCH Clicks + " + totalClick)
 
-      axios.patch('http://localhost:3000/api/users', clkdata)
+      axios.patch('https://clicker-eta.vercel.app/api/users', clkdata)
       .then((response) => {
         console.log(response)
         settotalClick(response.data.data.clicks)
@@ -114,7 +114,7 @@ const Home: NextPage = () => {
         
         
         
-        axios.post('http://localhost:3000/api/users/check', chkdata)
+        axios.post('https://clicker-eta.vercel.app/api/users/check', chkdata)
         .then((response: any) => {
           
           settotalClick(response.data.data.clicks)
@@ -133,7 +133,7 @@ const Home: NextPage = () => {
           wallet: wallet.publicKey?.toBase58(),
           clicks: 0
         };
-        axios.post('http://localhost:3000/api/users', newusrdata)
+        axios.post('https://clicker-eta.vercel.app/api/users', newusrdata)
         .then((response: any) => {
           console.log(response)
           
@@ -144,7 +144,7 @@ const Home: NextPage = () => {
 
 
         
-        axios.get('http://localhost:3000/api/users')
+        axios.get('https://clicker-eta.vercel.app/api/users')
         .then((response: any) => {
           console.log(response.data.data)
           setData(response.data.data)
@@ -190,7 +190,7 @@ const Home: NextPage = () => {
     initGame();
 
 
-    // axios.get('http://localhost:3000/api/users/leaders')
+    // axios.get('https://clicker-eta.vercel.app/api/users/leaders')
     // .then((response: any) => {
     //   console.log(data)
 
@@ -250,7 +250,7 @@ const Home: NextPage = () => {
       <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4">
         <div className="flex-1 text-xl font-mono">Solana Clicker</div>
         <div>
-          <WalletMultiButton />
+          <Wallet MultiButton />
         </div>
         {/* <div className="badge badge-accent badge-outline flex-none XXXml-2">
           <a href="#devnet">devnet</a>
@@ -363,7 +363,7 @@ const Home: NextPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item:any, index:any) => (
+                  {data.map((item:any, index:anyō) => (
                     <tr key={item.wallet}>
                       <th className="text-center">{index + 1}</th>
                       <td className="text-center">
