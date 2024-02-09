@@ -363,7 +363,7 @@ const Home: NextPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item:any, index:anyō) => (
+                  {data.map((item:any, index:any) => (
                     <tr key={item.wallet}>
                       <th className="text-center">{index + 1}</th>
                       <td className="text-center">
