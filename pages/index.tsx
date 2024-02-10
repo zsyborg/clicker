@@ -99,9 +99,9 @@ const Home: NextPage = () => {
 
 
          let clkdata = {
-          wallet: wallet.publicKey.toBase58(),
+          wallet: wallet?.publicKey.toBase58(),
           clicks: clickCount,
-          level: level  
+          level: level
         };
         axios.patch('https://clicker-eta.vercel.app/api/users', clkdata)
         .then((response) => {
