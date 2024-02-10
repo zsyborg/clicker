@@ -52,6 +52,8 @@ const Home: NextPage = () => {
   const wallet = useAnchorWallet();
   const [clickCount, setClickCount] = useState(0);
   const [totalClick, settotalClick] = useState(0);
+  const [level, setLevel] = useState(0);
+
 
   async function handleClick() {
     setGameError("");
@@ -68,42 +70,62 @@ const Home: NextPage = () => {
      
       
       
-      axios.post('https://clicker-eta.vercel.app/api/users/check', {wallet: wallet.publicKey.toBase58()})
-      .then((response) => {
-        console.log(response)
-        setClickCount(clickCount + 1)
-        settotalClick(response.data.data.clicks)
-        console.log(response.data.data)
-        console.log("Total Clicks" + totalClick)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-      
-      let clkdata = {
-        wallet: wallet.publicKey.toBase58(),
-        clicks: totalClick + 1  
-      };
-
-      console.log("PATCH Clicks + " + totalClick)
-
-      axios.patch('https://clicker-eta.vercel.app/api/users', clkdata)
-      .then((response) => {
-        console.log(response)
-        settotalClick(response.data.data.clicks)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    
-
+      // axios.post('https://clicker-eta.vercel.app/api/users/check', {wallet: wallet.publicKey.toBase58()})
+      // .then((response) => {
+      //   console.log(response)
+      //   setClickCount(clickCount + 1)
+      //   settotalClick(response.data.data.clicks)
+      //   console.log(response.data.data)
+      //   console.log("Total Clicks" + totalClick)
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
 
     }
+      
+     
+
+      // console.log("PATCH Clicks + " + totalClick)
+
+      
+      setClickCount(clickCount + 1)
+      settotalClick(totalClick + 1)
+      // Check if the totalClicks is a multiple of 10
+      if (clickCount % 10 === 0) {
+        // Level up and double the required clicks for the next level
+        setLevel(level + 1);
+
+
+
+         let clkdata = {
+          wallet: wallet.publicKey.toBase58(),
+          clicks: clickCount,
+          level: level  
+        };
+        axios.patch('https://clicker-eta.vercel.app/api/users', clkdata)
+        .then((response) => {
+          console.log(response)
+          settotalClick(response.data.data.clicks)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+  console.log("Total Clicks " + clickCount)
+  console.log("Reached Level " + level)
+}
+
+
   }
 
   useEffect(() => {
+
+
+
+
+
+
     async function initGame() {
       if (wallet) {
 
@@ -187,7 +209,7 @@ const Home: NextPage = () => {
       }
     }
     setIsConnected(connected);
-    initGame();
+    // initGame();
 
 
     // axios.get('https://clicker-eta.vercel.app/api/users/leaders')
@@ -201,7 +223,7 @@ const Home: NextPage = () => {
 
 
 
-  }, [connected, endpoint, network, wallet, gameAccountPublicKey]);
+  }, [connected, endpoint, network, wallet, gameAccountPublicKey, totalClick, level]);
 
   // airdrop test SOL if on devnet and player has less than 1 test SOL
   useEffect(() => {
@@ -292,7 +314,7 @@ const Home: NextPage = () => {
                 </div>
               )}
             </div>
-            <p>Total Clicks {totalClick}</p>
+            <p>Level Reached: {level}</p>
             <button
               // disabled={!isGameReady}
               onClick={() => {
