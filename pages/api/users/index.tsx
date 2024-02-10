@@ -7,6 +7,7 @@ import { MongoClient } from 'mongodb'
 import NextCors from 'nextjs-cors'
 
 
+
 // const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 
 async function listDatabases(client: MongoClient){
@@ -20,7 +21,7 @@ async function listDatabases(client: MongoClient){
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method } = req
   await dbConnect()
