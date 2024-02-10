@@ -153,7 +153,8 @@ const Home: NextPage = () => {
         
         let newusrdata = {
           wallet: wallet.publicKey?.toBase58(),
-          clicks: 0
+          clicks: 0,
+          level: 0
         };
         axios.post('https://clicker-eta.vercel.app/api/users', newusrdata)
         .then((response: any) => {
