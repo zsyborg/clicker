@@ -210,7 +210,7 @@ const Home: NextPage = () => {
       }
     }
     setIsConnected(connected);
-    // initGame();
+    initGame();
 
 
     // axios.get('https://clicker-eta.vercel.app/api/users/leaders')
