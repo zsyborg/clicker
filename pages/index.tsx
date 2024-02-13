@@ -106,7 +106,7 @@ const Home: NextPage = () => {
         axios.patch('https://clicker-eta.vercel.app/api/users', clkdata)
         .then((response) => {
           console.log(response)
-          settotalClick(response.data.data.clicks)
+          // settotalClick(response.data.data.clicks)
         })
         .catch((error) => {
           console.log(error);
@@ -142,6 +142,9 @@ const Home: NextPage = () => {
           settotalClick(response.data.data.clicks)
           console.log("Total Clicks = " + response.data.data.clicks)
           console.log("Current Click Count = " + clickCount)
+          settotalClick(response.data.data.clicks)
+          setLevel(response.data.data.level)
+
           
         })
         .catch((error: any) => {
@@ -325,7 +328,7 @@ const Home: NextPage = () => {
             >
               Click Me
             </button>
-              <h1>Number of clicks {clickCount}</h1>
+              <h1>Number of clicks {totalClick}</h1>
             {/* {isGameReady && (
               <div>
                 View game{" "}
