@@ -119,101 +119,111 @@ const Home: NextPage = () => {
 
   }
 
-  useEffect(() => {
 
 
 
 
 
 
-    async function initGame() {
-      if (wallet) {
+  
+  async function initGame() {
+    if (wallet) {
 
-        let chkdata = {
-          wallet: wallet.publicKey?.toBase58(),
-        };
+      let chkdata = {
+        wallet: wallet.publicKey?.toBase58(),
+      };
+      
+      
+      
+      
+      axios.post('https://clicker-eta.vercel.app/api/users/check', chkdata)
+      .then((response: any) => {
         
-        
-        
-        
-        axios.post('https://clicker-eta.vercel.app/api/users/check', chkdata)
-        .then((response: any) => {
-          
-          settotalClick(response.data.data.clicks)
-          console.log("Total Clicks = " + response.data.data.clicks)
-          console.log("Current Click Count = " + clickCount)
-          settotalClick(response.data.data.clicks)
-          setLevel(response.data.data.level)
-
-          
-        })
-        .catch((error: any) => {
-          console.log(error);
-        });
-        
-        
-        // Create New User
-        
-        let newusrdata = {
-          wallet: wallet.publicKey?.toBase58(),
-          clicks: 0,
-          level: 0
-        };
-        axios.post('https://clicker-eta.vercel.app/api/users', newusrdata)
-        .then((response: any) => {
-          console.log(response)
-          
-        })
-        .catch((error: any) => {
-          console.log(error);
-        });
-
+        settotalClick(response.data.data.clicks)
+        console.log("Total Clicks = " + response.data.data.clicks)
+        console.log("Current Click Count = " + clickCount)
+        settotalClick(response.data.data.clicks)
+        setLevel(response.data.data.level)
 
         
-        axios.get('https://clicker-eta.vercel.app/api/users')
-        .then((response: any) => {
-          console.log(response.data.data)
-          setData(response.data.data)
-          // data.map((item, index) => (
-          //   {item.wallet === wallet ? (
-          //     {setClickCount(item.clicks)}
-          //   ) : (
-          //     {item.wallet}
-          //   )}
-          // ))
-          
-          // if (data.wallet === wallet.publicKey.toBase58()) {
-          //   setClickCount(data.clicks)
-          //   console.log("Total Clicks" + data.clicks)
-          // }
-          
-        })
-        .catch((error: any) => {
-          console.log(error);
-        });
-
-
-
-
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+      
+      
+      // Create New User
+      
+      let newusrdata = {
+        wallet: wallet.publicKey?.toBase58(),
+        clicks: 0,
+        level: 0
+      };
+      axios.post('https://clicker-eta.vercel.app/api/users', newusrdata)
+      .then((response: any) => {
+        console.log(response)
         
-        // const gameState = await getCurrentGame({ wallet, endpoint });
-        // setIsGameReady(connected && gameState.isReady);
-        // setClicks(gameState.clicks);
-        // setGameAccountPublicKey(gameState.gameAccountPublicKey);
-        // setSolanaExplorerLink(
-        //   `https://explorer.solana.com/address/${gameAccountPublicKey}/anchor-account?cluster=${network}`
-        // );
-        // setGameError(gameState.errorMessage);
-      } else {
-        // setIsGameReady(false);
-        // setClicks(0);
-        // setGameAccountPublicKey("");
-        // setSolanaExplorerLink("");
-        // setGameError("");
-      }
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+
+
+      
+      axios.get('https://clicker-eta.vercel.app/api/users')
+      .then((response: any) => {
+        console.log(response.data.data)
+        setData(response.data.data)
+        // data.map((item, index) => (
+        //   {item.wallet === wallet ? (
+        //     {setClickCount(item.clicks)}
+        //   ) : (
+        //     {item.wallet}
+        //   )}
+        // ))
+        
+        // if (data.wallet === wallet.publicKey.toBase58()) {
+        //   setClickCount(data.clicks)
+        //   console.log("Total Clicks" + data.clicks)
+        // }
+        
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
+
+
+
+
+      
+      // const gameState = await getCurrentGame({ wallet, endpoint });
+      // setIsGameReady(connected && gameState.isReady);
+      // setClicks(gameState.clicks);
+      // setGameAccountPublicKey(gameState.gameAccountPublicKey);
+      // setSolanaExplorerLink(
+      //   `https://explorer.solana.com/address/${gameAccountPublicKey}/anchor-account?cluster=${network}`
+      // );
+      // setGameError(gameState.errorMessage);
+    } else {
+      // setIsGameReady(false);
+      // setClicks(0);
+      // setGameAccountPublicKey("");
+      // setSolanaExplorerLink("");
+      // setGameError("");
     }
-    setIsConnected(connected);
-    initGame();
+  }
+  // setIsConnected(connected);
+  initGame();
+
+
+
+
+
+
+
+
+
+  useEffect(() => {
 
 
     // axios.get('https://clicker-eta.vercel.app/api/users/leaders')
