@@ -126,10 +126,11 @@ export default async function handler(
        const ucl = JSON.stringify(req.body)
        const cl = JSON.parse(ucl)
        const userclicks = cl.clicks
+       const lvl = cl.level
        
        
-       console.log(wlty)
-          const patchUserClick = await usrCollection.updateOne({ wallet: wlty }, { $set: { clicks: userclicks } })
+       console.log("PATCH " + wlty)
+          const patchUserClick = await usrCollection.updateOne({ wallet: wlty }, { $set: { clicks: userclicks, level: lvl } })
           res.status(200).json({ success: true, data: patchUserClick })
           clty.close()
 

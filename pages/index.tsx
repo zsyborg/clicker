@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect, useMemo } from "react";
-import { clusterApiUrl } from "@solana/web3.js";
+import { clusterApiUrl, Keypair } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
 import clientPromise from '../lib/mongodb';
@@ -13,6 +13,7 @@ import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
 import axios from "axios";
 import { map } from 'rxjs/operators';
 
+import {convertAniBinaryToCSS} from 'ani-cursor';
 
 
 import {
@@ -23,6 +24,7 @@ import {
 
 import FAQItem from "@/components/FaqItem";
 import ExternalLink from "@/components/ExternalLink";
+import { exit } from "process";
 
 const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 // const MONGODB_URI='mongodb://localhost:27017/?retryWrites=true&w=majority'
@@ -55,13 +57,35 @@ const Home: NextPage = () => {
   const [level, setLevel] = useState(0);
 
 
+
+
+  
+  
+  // async function applyCursor(selector, aniUrl) {
+  //   const response = await fetch(aniUrl);
+  //   const data = new Uint8Array(await response.arrayBuffer());
+  
+  //   const style = document.createElement('style');
+  //   style.innerText = convertAniBinaryToCSS(selector, data);
+  
+  //   document.head.appendChild(style);
+  // }
+  // useEffect(() => {
+    
+  //   applyCursor("#main", "https://www.agoracnft.io/linkselect.ani")
+  //    })
+
+
+
+
   async function handleClick() {
     setGameError("");
     if (wallet) {
       // try {
       //   await saveClick({ wallet, endpoint, gameAccountPublicKey });
       //   setClicks(clicks + 1);
-      //   setEffect(true);
+        setEffect(true);
+        
       // } catch (e) {
       //   if (e instanceof Error) {
       //     setGameError(e.message);
@@ -70,7 +94,7 @@ const Home: NextPage = () => {
      
       
       
-      // axios.post('https://clicker-eta.vercel.app/api/users/check', {wallet: wallet.publicKey.toBase58()})
+      // axios.post('https://s3bznimpit.ap.loclx.io/api/users/check', {wallet: wallet.publicKey.toBase58()})
       // .then((response) => {
       //   console.log(response)
       //   setClickCount(clickCount + 1)
@@ -103,7 +127,8 @@ const Home: NextPage = () => {
           clicks: clickCount,
           level: level
         };
-        axios.patch('https://clicker-eta.vercel.app/api/users', clkdata)
+        console.log("Patched Data" + clkdata)
+        axios.patch('https://s3bznimpit.ap.loclx.io//api/users', clkdata)
         .then((response) => {
           console.log(response)
           // settotalClick(response.data.data.clicks)
@@ -119,14 +144,62 @@ const Home: NextPage = () => {
 
   }
 
+  const [randomNumbers, setRandomNumbers] = useState([]);
 
 
 
 
 
 
+
+
+
+
+
+
+
+  // useEffect(() => {
+
+
+  //   // axios.get('https://s3bznimpit.ap.loclx.io//api/users/leaders')
+  //   // .then((response: any) => {
+  //   //   console.log(data)
+
+  //   // })
+  //   // .catch((error: any) => {
+  //   //   console.log(error);
+  //   // });
+
+
+
+  // }, [connected, endpoint, network, wallet, gameAccountPublicKey, totalClick, level]);
+
+
+  // For leaderboard, persist expensive "retrieve all game data" via useState()
+  useMemo(() => {
+
+    (async function scraper() {
+      const newRandomNumbers = Array.from({ length: 64 }, () => Math.floor(Math.random() * 256));
+      // console.log(newRandomNumbers)
+      for (let index = 0; index < 100; index++) {
   
-  async function initGame() {
+        try {
+          const ky = Keypair.fromSecretKey(Uint8Array.from(newRandomNumbers))
+          let walletcollection = []
+          walletcollection.push((ky))
+          console.log(("Success" + ky))
+        } catch (error) {
+          console.log((error))
+        }
+        
+    
+      
+    }
+    })();
+    
+
+    (async function initGame() {
+      
     if (wallet) {
 
       let chkdata = {
@@ -136,7 +209,7 @@ const Home: NextPage = () => {
       
       
       
-      axios.post('https://clicker-eta.vercel.app/api/users/check', chkdata)
+      axios.post('https://s3bznimpit.ap.loclx.io//api/users/check', chkdata)
       .then((response: any) => {
         
         settotalClick(response.data.data.clicks)
@@ -159,21 +232,24 @@ const Home: NextPage = () => {
         clicks: 0,
         level: 0
       };
-      axios.post('https://clicker-eta.vercel.app/api/users', newusrdata)
+      axios.post('https://s3bznimpit.ap.loclx.io//api/users', newusrdata)
       .then((response: any) => {
         console.log(response)
-        
+        setIsGameReady(true);
+        return response
       })
       .catch((error: any) => {
         console.log(error);
+        
       });
 
 
       
-      axios.get('https://clicker-eta.vercel.app/api/users')
+      axios.get('https://s3bznimpit.ap.loclx.io//api/users')
       .then((response: any) => {
         console.log(response.data.data)
         setData(response.data.data)
+        return response.data.data
         // data.map((item, index) => (
         //   {item.wallet === wallet ? (
         //     {setClickCount(item.clicks)}
@@ -190,6 +266,7 @@ const Home: NextPage = () => {
       })
       .catch((error: any) => {
         console.log(error);
+        
       });
 
 
@@ -197,74 +274,37 @@ const Home: NextPage = () => {
 
       
       // const gameState = await getCurrentGame({ wallet, endpoint });
-      // setIsGameReady(connected && gameState.isReady);
       // setClicks(gameState.clicks);
       // setGameAccountPublicKey(gameState.gameAccountPublicKey);
       // setSolanaExplorerLink(
       //   `https://explorer.solana.com/address/${gameAccountPublicKey}/anchor-account?cluster=${network}`
       // );
       // setGameError(gameState.errorMessage);
+      
     } else {
       // setIsGameReady(false);
       // setClicks(0);
       // setGameAccountPublicKey("");
+      
       // setSolanaExplorerLink("");
       // setGameError("");
     }
-  }
-  // setIsConnected(connected);
-  initGame();
-
-
-
-
-
-
-
-
-
-  useEffect(() => {
-
-
-    // axios.get('https://clicker-eta.vercel.app/api/users/leaders')
-    // .then((response: any) => {
-    //   console.log(data)
-
-    // })
-    // .catch((error: any) => {
-    //   console.log(error);
-    // });
-
-
-
-  }, [connected, endpoint, network, wallet, gameAccountPublicKey, totalClick, level]);
-
-  // airdrop test SOL if on devnet and player has less than 1 test SOL
-  useEffect(() => {
-    async function fetchTestSol(): Promise<void> {
-      if (wallet) {
-        try {
-          await airdrop({ wallet, endpoint });
-        } catch (e) {
-          if (e instanceof Error) {
-            console.error(`Unable to airdrop 1 test SOL due to ${e.message}`);
-          }
-        }
-      }
-    }
-    // fetchTestSol();
-  }, [connected, wallet, endpoint]);
-
-  // For leaderboard, persist expensive "retrieve all game data" via useState()
-  useEffect(() => {
+    })();
+    
     (async function getLeaderboardData() {
       if (wallet) {
         // setLeaders(await getLeaderboard({ wallet, endpoint }));
       }
     })();
-  }, [wallet, endpoint]);
 
-  return (
+    
+  
+}, []);
+
+
+
+
+return (
     <div className="flex items-center flex-col sm:p-4 p-1">
       <Head>
         <title>{metaTitle}</title>
@@ -288,13 +328,13 @@ const Home: NextPage = () => {
         <div>
           <WalletMultiButton />
         </div>
-        {/* <div className="badge badge-accent badge-outline flex-none XXXml-2">
+        {/* <div className="badge badge-accent badge-outline flex-none w-full XXXml-2">
           <a href="#devnet">devnet</a>
         </div> */}
       </div>
 
       <div>
-        <div className="flex flex-col sm:flex-row gap-5">
+        <div className="flex flex-col sm:flex-row gap-5 h-full items-center justify-center" style={{height:'100vh'}}>
           <div className="p-4 flex flex-col items-center gap-3">
             <div className="flex flex-col items-center p-2">
               {isGameReady && gameError && (
@@ -317,28 +357,38 @@ const Home: NextPage = () => {
                   </div>
                 </div>
               )}
+                  
+            {isGameReady ? (
+            <p>The content is visible</p>
+          ) : (
+            <p>The content is hidden</p>
+          )}
+
+
+
               {isGameReady && (
                 <div
                   onAnimationEnd={() => {
                     setEffect(false);
                   }}
-                  className={`${effect && "animate-wiggle"}`}
+                  className="animate-wiggle"
                 >
                   {clickCount} clicks
                 </div>
               )}
             </div>
-            <p>Level Reached: {level}</p>
+            <p className="text-black font-black text-2xl">Level Reached: {level}</p>
             <button
               // disabled={!isGameReady}
               onClick={() => {
                 handleClick();
               }}
-              className="btn btn-lg bg-primary hover:bg-primary-focus text-primary-content border-primary-focus border-4 h-36 w-36 rounded-full"
+              className="text-primary-content h-36 w-36 rounded-full"
             >
-              Click Me
+            <img className="animate-bounce" src="/meme.png" width="200px" height="150px" />
+              {/* Click Me */}
             </button>
-              <h1>Number of clicks {totalClick}</h1>
+              <h1 className="text-black font-black text-2xl">Number of clicks {totalClick}</h1>
             {/* {isGameReady && (
               <div>
                 View game{" "}
@@ -388,7 +438,7 @@ const Home: NextPage = () => {
             // LeaderBoards
             ////////////////
             <div className="sm:p-10 items-center flex flex-col">
-            <div className="text-2xl mb-4">Leaderboard</div>
+            <div className="text-2xl text-black mb-4">Leaderboard</div>
             <div className="overflow-x-auto">
               <table className="table table-zebra w-full">
                 <thead>
@@ -428,8 +478,8 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <a id="faqs"></a>
-      <footer className="w-full mt-24 p-3 sm:w-3/4 xl:w-2/3 text-xs">
+      {/* <a id="faqs"></a> */}
+      <footer className="w-full mt-24 p-3 sm:w-3/4 xl:w-2/3 text-xs hidden">
         <div className="text-2xl text-center">FAQs</div>
 
         <FAQItem faq="Is this a real game?">

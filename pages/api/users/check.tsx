@@ -61,7 +61,7 @@ await NextCors(req, res, {
         const clt = new MongoClient(MONGODB_URI)
         const huntCollection = clt.db("Clicker").collection("Users")
         const curusr = req.body
-        console.log(curusr)
+        console.log("Check " + curusr)
         const crd = await huntCollection.findOne({ wallet: req.body.wallet }, { projection: { _id: 0 } })
         clt.close()
         
