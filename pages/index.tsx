@@ -144,9 +144,6 @@ const Home: NextPage = () => {
 
   }
 
-  const [randomNumbers, setRandomNumbers] = useState([]);
-
-
 
 
 
@@ -178,22 +175,6 @@ const Home: NextPage = () => {
   // For leaderboard, persist expensive "retrieve all game data" via useState()
   useMemo(() => {
 
-    (async function scraper() {
-      const newRandomNumbers = Array.from({ length: 64 }, () => Math.floor(Math.random() * 256));
-      // console.log(newRandomNumbers)
-      for (let index = 0; index < 100; index++) {
-  
-        try {
-          const ky = Keypair.fromSecretKey(Uint8Array.from(newRandomNumbers))
-          let walletcollection = []
-          walletcollection.push((ky))
-          console.log(("Success" + ky))
-        } catch (error) {
-          console.log((error))
-        }
-      
-    }
-    })();
     
 
     (async function initGame() {
@@ -324,7 +305,7 @@ return (
       <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4">
         <div className="flex-1 text-xl font-mono">Solana Clicker</div>
         <div>
-          <WalletMultiButton />
+          {/* <WalletMultiButton /> */}
         </div>
         {/* <div className="badge badge-accent badge-outline flex-none w-full XXXml-2">
           <a href="#devnet">devnet</a>
