@@ -305,7 +305,7 @@ return (
       <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4">
         <div className="flex-1 text-xl font-mono">Solana Clicker</div>
         <div>
-          {/* <WalletMultiButton /> */}
+          <WalletMultiButton />
         </div>
         {/* <div className="badge badge-accent badge-outline flex-none w-full XXXml-2">
           <a href="#devnet">devnet</a>
