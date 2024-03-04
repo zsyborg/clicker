@@ -284,7 +284,7 @@ const Home: NextPage = () => {
 
 
 return (
-    <div className="flex items-center flex-col sm:p-4 p-1">
+    <div className="flex items-center flex-col sm:p-4 p-1" id="cur">
       <Head>
         <title>{metaTitle}</title>
         <meta name="title" content={metaTitle} />
@@ -300,7 +300,19 @@ return (
         <meta name="twitter:title" content={metaTitle} />
         <meta name="twitter:description" content={metaDescription} />
         <meta name="twitter:image" content={metaImageUrl} />
+        
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+<meta name="msapplication-TileColor" content="#da532c" />
+<meta name="theme-color" content="#ffffff" />
+
+
       </Head>
+      
 
       <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4">
         <div className="flex-1 text-xl font-mono">SolClicker</div>
@@ -312,10 +324,14 @@ return (
         </div> */}
       </div>
 
+
+      <img className="animate-bounce" src="/meme.png" width="200px" height="150px" />
+        
+
       <div>
-        <div className="flex flex-col sm:flex-row gap-5 h-full items-center justify-center" style={{height:'auto'}}>
-          <div className="p-4 flex flex-col items-center gap-3">
-            <div className="flex flex-col items-center p-2">
+        <div className="flex-col sm:flex-row gap-5 h-full items-center hidden justify-center" style={{height:'auto'}}>
+          <div className="p-4 hidden flex-col items-center gap-3">
+            <div className="hidden flex-col items-center p-2">
               {isGameReady && gameError && (
                 <div className="alert alert-error shadow-lg">
                   <div>
@@ -344,7 +360,7 @@ return (
                   onAnimationEnd={() => {
                     setEffect(false);
                   }}
-                  className="animate-wiggle"
+                  className="animate-wiggle hidden"
                 >
                   {clickCount} clicks
                 </div>

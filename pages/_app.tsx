@@ -18,6 +18,8 @@ import {
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 import { useMemo } from "react";
+import {convertAniBinaryToCSS} from 'ani-cursor';
+import { useState, useEffect } from "react";
 
 // Use require instead of import since order matters
 require("@solana/wallet-adapter-react-ui/styles.css");
@@ -27,7 +29,7 @@ import type { AppProps } from "next/app";
 
 function MyApp({ Component, pageProps }: AppProps) {
   // Can be set to 'devnet', 'testnet', or 'mainnet-beta'
-  const network = WalletAdapterNetwork.Devnet;
+  const network = WalletAdapterNetwork.Mainnet;
 
   // You can also provide a custom RPC endpoint
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
@@ -49,6 +51,21 @@ function MyApp({ Component, pageProps }: AppProps) {
     ],
     [network]
   );
+
+  async function applyCursor(selector:any, aniUrl:any) {
+    const response = await fetch(aniUrl);
+    const data = new Uint8Array(await response.arrayBuffer());
+  
+    const style = document.createElement('style');
+    style.innerText = convertAniBinaryToCSS(selector, data);
+  
+    document.head.appendChild(style);
+  }
+  useEffect(() => {
+    
+    applyCursor("#cur", "/peo1029.ani")
+     })
+
 
   return (
     <ConnectionProvider endpoint={endpoint}>
