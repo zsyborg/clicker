@@ -23,6 +23,7 @@
     "@solana/wallet-adapter-react": "^0.15.4",
     "@solana/wallet-adapter-react-ui": "^0.9.6",
     "@solana/wallet-adapter-wallets": "^0.16.1",
+    "@vercel/kv": "^1.0.1",
     "ani-cursor": "^0.0.5",
     "axios": "^1.6.7",
     "daisyui": "^2.15.0",
