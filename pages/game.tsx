@@ -95,7 +95,7 @@ const Home: NextPage = () => {
      
       
       
-      // axios.post('https://www.solclicker.xyzapi/users/check', {wallet: wallet.publicKey.toBase58()})
+      // axios.post('api/users/check', {wallet: wallet.publicKey.toBase58()})
       // .then((response) => {
       //   console.log(response)
       //   setClickCount(clickCount + 1)
@@ -129,7 +129,7 @@ const Home: NextPage = () => {
           level: level
         };
         console.log("Patched Data" + clkdata)
-        axios.patch('https://www.solclicker.xyz/api/users', clkdata)
+        axios.patch('/api/users', clkdata)
         .then((response) => {
           console.log(response)
           // settotalClick(response.data.data.clicks)
@@ -159,7 +159,7 @@ const Home: NextPage = () => {
   // useEffect(() => {
 
 
-  //   // axios.get('https://www.solclicker.xyz/api/users/leaders')
+  //   // axios.get('/api/users/leaders')
   //   // .then((response: any) => {
   //   //   console.log(data)
 
@@ -189,7 +189,7 @@ const Home: NextPage = () => {
       
       
       
-      axios.post('https://www.solclicker.xyz/api/users/check', chkdata)
+      axios.post('/api/users/check', chkdata)
       .then((response: any) => {
         
         settotalClick(response.data.data.clicks)
@@ -212,7 +212,7 @@ const Home: NextPage = () => {
         clicks: 0,
         level: 0
       };
-      axios.post('https://www.solclicker.xyz/api/users', newusrdata)
+      axios.post('/api/users', newusrdata)
       .then((response: any) => {
         console.log(response)
         setIsGameReady(true);
@@ -225,7 +225,7 @@ const Home: NextPage = () => {
 
 
       
-      axios.get('https://www.solclicker.xyz/api/users')
+      axios.get('/api/users')
       .then((response: any) => {
         console.log(response.data.data)
         setData(response.data.data)
