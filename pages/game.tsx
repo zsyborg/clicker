@@ -12,6 +12,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
 import axios from "axios";
 import { map } from 'rxjs/operators';
+const { DynamoDBClient, ListTablesCommand } = require("@aws-sdk/client-dynamodb");
 
 import {convertAniBinaryToCSS} from 'ani-cursor';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -58,7 +59,16 @@ const Home: NextPage = () => {
   const [level, setLevel] = useState(0);
 
 
-
+  (async () => {
+    const client = new DynamoDBClient({ region: "ap-south-1" });
+    const command = new ListTablesCommand({});
+    try {
+      const results = await client.send(command);
+      console.log(results.TableNames.join("\n"));
+    } catch (err) {
+      console.error(err);
+    }
+  })();
 
   
   
