@@ -340,9 +340,9 @@ return (
         
 
       <div>
-        <div className="flex-col sm:flex-row gap-5 h-full items-center flex justify-center" style={{height:'auto'}}>
-          <div className="p-4 flex flex-col items-center gap-3">
-            <div className="flex flex-col items-center p-2">
+        <div className="flex-col sm:flex-row gap-5 h-full items-center hidden justify-center" style={{height:'auto'}}>
+          <div className="p-4 hidden flex-col items-center gap-3">
+            <div className="hidden flex-col items-center p-2">
               {isGameReady && gameError && (
                 <div className="alert alert-error shadow-lg">
                   <div>
