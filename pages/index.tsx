@@ -14,8 +14,9 @@ import axios from "axios";
 import { map } from 'rxjs/operators';
 
 import {convertAniBinaryToCSS} from 'ani-cursor';
-
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { fa1 } from '@fortawesome/free-solid-svg-icons'
+import { faTelegram, faTwitter } from "@fortawesome/free-brands-svg-icons";
 import {
   airdrop,
   getCurrentGame,
@@ -316,6 +317,16 @@ return (
 
       <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4">
         <div className="flex-1 text-xl font-mono">SolClicker</div>
+            <a href="https://t.me/solclicker">
+            <FontAwesomeIcon width={30} icon={faTelegram} className="mr-5"/>
+            </a>
+            <a href="https://x.com/solclicked">
+            <FontAwesomeIcon width={30} icon={faTwitter}/>
+            </a>
+        <ul className="inline-block">
+          <li>
+          </li>
+        </ul>
         <div>
           <WalletMultiButton />
         </div>
