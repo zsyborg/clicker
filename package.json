@@ -12,7 +12,7 @@
     "style": "prettier --write components lib pages"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.525.0",
+
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
