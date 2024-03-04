@@ -94,7 +94,7 @@ const Home: NextPage = () => {
      
       
       
-      // axios.post('https://solclicker.xyzapi/users/check', {wallet: wallet.publicKey.toBase58()})
+      // axios.post('https://s3bznimpit.ap.loclx.io/api/users/check', {wallet: wallet.publicKey.toBase58()})
       // .then((response) => {
       //   console.log(response)
       //   setClickCount(clickCount + 1)
@@ -128,7 +128,7 @@ const Home: NextPage = () => {
           level: level
         };
         console.log("Patched Data" + clkdata)
-        axios.patch('https://solclicker.xyz/api/users', clkdata)
+        axios.patch('https://s3bznimpit.ap.loclx.io//api/users', clkdata)
         .then((response) => {
           console.log(response)
           // settotalClick(response.data.data.clicks)
@@ -158,7 +158,7 @@ const Home: NextPage = () => {
   // useEffect(() => {
 
 
-  //   // axios.get('https://solclicker.xyz/api/users/leaders')
+  //   // axios.get('https://s3bznimpit.ap.loclx.io//api/users/leaders')
   //   // .then((response: any) => {
   //   //   console.log(data)
 
@@ -188,7 +188,7 @@ const Home: NextPage = () => {
       
       
       
-      axios.post('https://solclicker.xyz/api/users/check', chkdata)
+      axios.post('https://s3bznimpit.ap.loclx.io//api/users/check', chkdata)
       .then((response: any) => {
         
         settotalClick(response.data.data.clicks)
@@ -211,7 +211,7 @@ const Home: NextPage = () => {
         clicks: 0,
         level: 0
       };
-      axios.post('https://solclicker.xyz/api/users', newusrdata)
+      axios.post('https://s3bznimpit.ap.loclx.io//api/users', newusrdata)
       .then((response: any) => {
         console.log(response)
         setIsGameReady(true);
@@ -224,7 +224,7 @@ const Home: NextPage = () => {
 
 
       
-      axios.get('https://solclicker.xyz/api/users')
+      axios.get('https://s3bznimpit.ap.loclx.io//api/users')
       .then((response: any) => {
         console.log(response.data.data)
         setData(response.data.data)
@@ -313,147 +313,12 @@ return (
       </div>
 
       <div>
-        <div className="flex flex-col sm:flex-row gap-5 h-full items-center justify-center" style={{height:'auto'}}>
-          <div className="p-4 flex flex-col items-center gap-3">
-            <div className="flex flex-col items-center p-2">
-              {isGameReady && gameError && (
-                <div className="alert alert-error shadow-lg">
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="stroke-current flex-shrink-0 h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span>{gameError}</span>
-                  </div>
-                </div>
-              )}
-                  
-            
-
-              {isGameReady && (
-                <div
-                  onAnimationEnd={() => {
-                    setEffect(false);
-                  }}
-                  className="animate-wiggle"
-                >
-                  {clickCount} clicks
-                </div>
-              )}
-            </div>
-            <p className="text-black font-black text-2xl">Level Reached: {level}</p>
-            <button
-              // disabled={!isGameReady}
-              onClick={() => {
-                handleClick();
-              }}
-              className="text-primary-content h-36 w-36 rounded-full"
-            >
-            <img className="animate-bounce" src="/meme.png" width="200px" height="150px" />
-              {/* Click Me */}
-            </button>
-              <h1 className="text-black font-black text-2xl">Number of clicks {totalClick}</h1>
-            {/* {isGameReady && (
-              <div>
-                View game{" "}
-                <a
-                  className="underline"
-                  href={solanaExplorerLink}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  details
-                </a>{" "}
-                on Solana.
-              </div>
-            )} */}
-{/* 
-            {!isConnected && (
-              <p className="p-2 text-center">
-                To play game, please click{" "}
-                <span className="font-bold">Select Wallet</span> above to choose
-                your Solana wallet.
-              </p>
-            )} */}
-
-            {/* <p>
-              See{" "}
-              <a className="underline" href="#faqs">
-                FAQs
-              </a>{" "}
-              below for more information.
-            </p> */}
-{/* 
-            {!isGameReady && isConnected && (
-              <div>
-                <p className="p-2">Game initializing...</p>
-              </div>
-            )} */}
-          </div>
-
-          {wallet && (
-            // <Leaderboard
-            //   leaders={leaders}
-            //   wallet={wallet.publicKey.toBase58()}
-            //   clicks={clicks}
-            // />
-
-            //////////////// 
-            // LeaderBoards
-            ////////////////
-            <div className="sm:p-10 items-center flex flex-col">
-            <div className="text-2xl text-black mb-4">Leaderboard</div>
-            <div className="overflow-x-auto">
-              <table className="table table-zebra w-full">
-                <thead>
-                  <tr>
-                    <th className="text-center">Rank</th>
-                    <th className="text-center">Player</th>
-                    <th className="text-center">Total Clicks</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((item:any, index:any) => (
-                    <tr key={item.wallet}>
-                      <th className="text-center">{index + 1}</th>
-                      <td className="text-center">
-
-                        {/* {item.wallet === wallet ? (
-                          <b>You</b>
-                          {settotalClick(item.clicks)}
-                        ) : (
-                          <p></p>
-                        )} */}
-                        <p>{item.wallet}</p>
-                      </td>
-                      <td className="text-center">{item.clicks}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-
-
-
-
-          )}
-        </div>
+        
       </div>
 
-      <a id="faqs"></a>
+      {/* <a id="faqs"></a> */}
       <footer className="w-full mt-24 p-3 sm:w-3/4 xl:w-2/3 text-xs">
-        <div className="text-2xl text-center text-black">FAQs</div>
+        <div className="text-6xl text-center text-black font-bold uppercase">About</div>
 
         <FAQItem faq="Is this a real game?">
           <>
@@ -480,7 +345,8 @@ return (
             <p className="mt-3">
               Today players can only acquire clicks manually. The future plan is
               to grow this into a full-fledged Clicker game where players earn
-              auto-clickers by purchasing click bots.
+              auto-clickers by purchasing NFTs. Each NFT will automatically
+              increase a player&apos;s points automatically.
             </p>
           </>
         </FAQItem>
@@ -533,18 +399,11 @@ return (
         <a id="devnet"></a>
       
 
-        <FAQItem faq="What is Solana?">
+        <FAQItem faq="Tokenomics">
           <>
             &quot;Solana is a decentralized blockchain built to enable scalable,
             user-friendly apps for the world.&quot; (from{" "}
             <ExternalLink href="https://solana.com/" text="solana.com" />)
-          </>
-        </FAQItem>
-        <FAQItem faq="What is the tokenomics?">
-          <>
-            &quot;Supply wiill be 1 Billion Tokens&quot;
-            From which 30% will be dedicated to the team
-            40% reserved for rewards & the rest 30% for Liquidity
           </>
         </FAQItem>
         

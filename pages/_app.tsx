@@ -9,6 +9,11 @@ import {
   SlopeWalletAdapter,
   SolflareWalletAdapter,
   TorusWalletAdapter,
+  BaseSolletWalletAdapter,
+  CloverWalletAdapter,
+  Coin98WalletAdapter,
+  ExodusWalletAdapter,
+
 } from "@solana/wallet-adapter-wallets";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
@@ -35,10 +40,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
+      new ExodusWalletAdapter({network}),
       new GlowWalletAdapter(),
       new SlopeWalletAdapter(),
       new SolflareWalletAdapter({ network }),
       new TorusWalletAdapter(),
+      new Coin98WalletAdapter({network}),
     ],
     [network]
   );
