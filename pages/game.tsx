@@ -36,8 +36,8 @@ const Home: NextPage = () => {
   const metaTitle = "Solana Clicker";
   const metaDescription =
     "Solana Clicker is an exciting ans simple clicker game to earn tokens. Just clickety click. Keep Clicking and keep earning!!!!";
-  const metaAbsoluteUrl = "https://solclicker.io/";
-  const metaImageUrl = "https://solclicker.io/home.png";
+  const metaAbsoluteUrl = "https://www.solclicker.io/";
+  const metaImageUrl = "https://www.solclicker.io/home.png";
 
   const [clicks, setClicks] = useState(0);
   const [effect, setEffect] = useState(false);
@@ -95,7 +95,7 @@ const Home: NextPage = () => {
      
       
       
-      // axios.post('https://solclicker.xyzapi/users/check', {wallet: wallet.publicKey.toBase58()})
+      // axios.post('https://www.solclicker.xyzapi/users/check', {wallet: wallet.publicKey.toBase58()})
       // .then((response) => {
       //   console.log(response)
       //   setClickCount(clickCount + 1)
@@ -129,7 +129,7 @@ const Home: NextPage = () => {
           level: level
         };
         console.log("Patched Data" + clkdata)
-        axios.patch('https://solclicker.xyz/api/users', clkdata)
+        axios.patch('https://www.solclicker.xyz/api/users', clkdata)
         .then((response) => {
           console.log(response)
           // settotalClick(response.data.data.clicks)
@@ -159,7 +159,7 @@ const Home: NextPage = () => {
   // useEffect(() => {
 
 
-  //   // axios.get('https://solclicker.xyz/api/users/leaders')
+  //   // axios.get('https://www.solclicker.xyz/api/users/leaders')
   //   // .then((response: any) => {
   //   //   console.log(data)
 
@@ -189,7 +189,7 @@ const Home: NextPage = () => {
       
       
       
-      axios.post('https://solclicker.xyz/api/users/check', chkdata)
+      axios.post('https://www.solclicker.xyz/api/users/check', chkdata)
       .then((response: any) => {
         
         settotalClick(response.data.data.clicks)
@@ -212,7 +212,7 @@ const Home: NextPage = () => {
         clicks: 0,
         level: 0
       };
-      axios.post('https://solclicker.xyz/api/users', newusrdata)
+      axios.post('https://www.solclicker.xyz/api/users', newusrdata)
       .then((response: any) => {
         console.log(response)
         setIsGameReady(true);
@@ -225,7 +225,7 @@ const Home: NextPage = () => {
 
 
       
-      axios.get('https://solclicker.xyz/api/users')
+      axios.get('https://www.solclicker.xyz/api/users')
       .then((response: any) => {
         console.log(response.data.data)
         setData(response.data.data)
