@@ -23,4 +23,6 @@ body{
     100% { transform: translate(2px, 0); }
   }
 
-
+,headbg{
+  background: url('../public/back1.jpg');
+}

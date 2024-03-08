@@ -487,7 +487,7 @@ return (
             <p>
               Yes, it is!!. This game is being developed on Solana
               Blockchain. It&apos;s in the form of a game with
-              very simple rules. Just keep Clicking. The wallet with most clicks wins a surprise prize!!!! the next 2 wallets will also receive our tokens as token of appreciation and hardwork of clicking!!!
+              very simple rules. Just keep Clicking. The wallet with most clicks wins tokens!!!!
             </p>
            
           </>
@@ -570,9 +570,7 @@ return (
         <FAQItem faq="What is the tokenomics?">
           <>
             &quot;Supply wiill be 1 Billion Tokens&quot;
-            From which 30% will be dedicated to the team
-            40% reserved for rewards & the rest 30% for Liquidity
-          </>
+                      </>
         </FAQItem>
         
       </footer>

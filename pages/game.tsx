@@ -311,7 +311,7 @@ return (
       </Head>
       
 
-      <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4">
+      <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4 headbg">
         <div className="flex-1 text-xl font-mono">SolClicker</div>
             <a href="https://t.me/solclicker">
             <FontAwesomeIcon width={30} icon={faTelegram} className="mr-5"/>
