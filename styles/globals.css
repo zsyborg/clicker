@@ -22,7 +22,11 @@ body{
     50% { transform: translate(-2px, 0); }
     100% { transform: translate(2px, 0); }
   }
-
-,headbg{
+/* 
+.headbg{
   background: url('../public/back1.jpg');
+} */
+
+.blacked{
+  color: #000 !important;
 }

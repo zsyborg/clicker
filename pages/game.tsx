@@ -371,7 +371,7 @@ return (
                 </div>
               )}
             </div>
-            <p className="text-black font-black text-2xl">Level Reached: {level}</p>
+            <p className="font-black text-2xl" style={{color:'black !important'}}>Level Reached: {level}</p>
             <button
               // disabled={!isGameReady}
               onClick={() => {
@@ -382,7 +382,7 @@ return (
             <img className="animate-bounce" src="/meme.png" width="200px" height="150px" />
               {/* Click Me */}
             </button>
-              <h1 className="text-black font-black text-2xl">Number of clicks {totalClick}</h1>
+              <h1 className="font-black text-2xl" style={{color:'black !important'}}>Number of clicks {totalClick}</h1>
             {/* {isGameReady && (
               <div>
                 View game{" "}
@@ -432,7 +432,7 @@ return (
             // LeaderBoards
             ////////////////
             <div className="sm:p-10 items-center flex flex-col">
-            <div className="text-2xl text-black mb-4">Leaderboard</div>
+            <p className="text-2xl blacked mb-4">Leaderboard</p>
             <div className="overflow-x-auto">
               <table className="table table-zebra w-full">
                 <thead>
