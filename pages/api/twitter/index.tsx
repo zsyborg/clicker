@@ -10,7 +10,7 @@ import { makeOAuthHeader } from "https://deno.land/x/twitter_v1_oauth/mod.ts";
 
 
 const axios = require('axios');
-const qs = require('qs');
+// const qs = require('qs');
 
 // const client = new Client("AAAAAAAAAAAAAAAAAAAAAPZytAEAAAAAtboSrBTKCMP4LbJ%2FlSKt3oPwcFo%3DpAqJVf9ms6z9JEDzzMqefZxWppDUO7boYwtDizZpQA8qVg3JQ2");
 
@@ -123,7 +123,7 @@ export default async function handler(
       console.log("User Doesn't Exists")
     }
     */
-    let data = qs.stringify({
+    let data = JSON.stringify({
       'grant_type': 'client_credentials' 
     });
     
