@@ -1,23 +1,31 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import Card, {Cards} from '../../../models/Card'
-const MONGODB_URI = process.env.MONGODB_URI!
+// const MONGODB_URI = process.env.MONGODB_URI!
 import dbConnect from '../../../lib/dbConnect'
 import clientPromise from '../../../lib/mongodb'
 import { MongoClient } from 'mongodb'
 import NextCors from 'nextjs-cors'
-import { createClient } from '@vercel/kv';
-import { MongoClientOptions } from 'mongodb'
+import passport from 'passport';
+import { makeOAuthHeader } from "https://deno.land/x/twitter_v1_oauth/mod.ts";
 
+
+const axios = require('axios');
+const qs = require('qs');
+
+// const client = new Client("AAAAAAAAAAAAAAAAAAAAAPZytAEAAAAAtboSrBTKCMP4LbJ%2FlSKt3oPwcFo%3DpAqJVf9ms6z9JEDzzMqefZxWppDUO7boYwtDizZpQA8qVg3JQ2");
 
 // const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
+const MONGODB_URI="mongodb://127.0.0.1:27017"
 
 async function listDatabases(client: MongoClient){
-  const db = client.db('Clicker')
+  const db = client.db('Inviter')
   const coll = db.collection('Users')
   const items = coll.find()
   // console.log(items)
   return items
 };
+
+
 
 
 export default async function handler(
@@ -45,7 +53,7 @@ export default async function handler(
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
  });
       var opts = {
-        dbName: 'Clicker',
+        dbName: 'Inviter',
         server:
         { socketOptions: 
           { 
@@ -56,13 +64,13 @@ export default async function handler(
       }
 
       
-       
+
       try {
 
         
     const clt = new MongoClient(MONGODB_URI, opts)
     
-    const huntCollection = clt.db("Clicker").collection("Users")
+    const huntCollection = clt.db("Inviter").collection("Users")
     // const crd = await huntCollection.find({}).toArray()
     const crd = await huntCollection.find().sort({clicks: -1}).toArray()
       
@@ -85,24 +93,24 @@ export default async function handler(
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
  });
 
-        const clt = new MongoClient(MONGODB_URI)
-    const huntCollection = clt.db("Clicker").collection("Users")
-    const curruser = JSON.stringify(req.body)
-    const usr = JSON.parse(curruser)
-    const wlt = usr.wallet
+    // const clt = new MongoClient(MONGODB_URI)
+    // const huntCollection = clt.db("Inviter").collection("Users")
+    // const curruser = JSON.stringify(req.body)
+    // const usr = JSON.parse(curruser)
+    // const wlt = usr.wallet
 
-    // const getAllUsers = await huntCollection.findOne({ wallet: wlt }, { projection: { _id: 0 } })
+    // // const getAllUsers = await huntCollection.findOne({ wallet: wlt }, { projection: { _id: 0 } })
 
-     // Check if the user already exists
-     const existingUser = await huntCollection.findOne({ wallet: wlt });
-    if (existingUser) {
-      res.status(201).json({ success: true, data: existingUser })
-      clt.close()
-    } else {
-      const crd = await huntCollection.insertOne(req.body)
-      res.status(201).json({ success: true, data: crd })
-      clt.close()
-    }
+    //  // Check if the user already exists
+    //  const existingUser = await huntCollection.findOne({ wallet: wlt });
+    // if (existingUser) {
+    //   res.status(201).json({ success: true, data: existingUser })
+    //   clt.close()
+    // } else {
+    //   const crd = await huntCollection.insertOne(req.body)
+    //   res.status(201).json({ success: true, data: crd })
+    //   clt.close()
+    // }
     // Condition to check is user exists. Create if doesn't
     /*if (getAllUsers.wallet === wlt) {
       console.log("User Exists")
@@ -115,6 +123,39 @@ export default async function handler(
       console.log("User Doesn't Exists")
     }
     */
+    let data = qs.stringify({
+      'grant_type': 'client_credentials' 
+    });
+    
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.twitter.com/oauth2/token',
+      headers: { 
+        'consumer_key': '7RiddfgFIESOW6VZx9srqRUdw', 
+        'consumer_secret': 'WUTR8zvPlnXPNcftESiBt5G7MWWZsHfYv9JUkTz1JeK4QAgRIJ', 
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 
+        'access_token': '1695124202053910536-hu6FZMh4YXk6mlQiHPPtL2TTsHr43F', 
+        'token_secret': '0l2KmJ0cEgR9R2vlPOBTCTvORfjnV9Vv5nj4AZ2Atgb1T', 
+        'client_id': 'Z0xHV1VrdUF4cmlycndDMGpXMUI6MTpjaQ', 
+        'client_secret': 'f9CMsJQBw5P9OpadbJxlODV1G0sN2rsfvJF9-PttpqgvipEhPe', 
+        'Authorization': 'Basic N1JpZGRmZ0ZJRVNPVzZWWng5c3JxUlVkdzpXVVRSOHp2UGxuWFBOY2Z0RVNpQnQ1RzdNV1dac0hmWXY5SlVrVHoxSmVLNFFBZ1JJSg==', 
+        'Cookie': 'guest_id=v1%3A171246219098204123; guest_id_ads=v1%3A171246219098204123; guest_id_marketing=v1%3A171246219098204123; personalization_id="v1_xzo+im0t+3gklY3EtKLmFA=="'
+      },
+      data : data
+    };
+    
+    axios.request(config)
+    .then((response:any) => {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch((error:any) => {
+      console.log(error);
+    });
+    
+
+
+
       break
 
       ////////////////////////
@@ -130,7 +171,7 @@ export default async function handler(
        });
        
        const clty = new MongoClient(MONGODB_URI)
-       const usrCollection = clty.db("Clicker").collection("Users")
+       const usrCollection = clty.db("Inviter").collection("Users")
        
        const currusr = JSON.stringify(req.body)
        const usry = JSON.parse(currusr)

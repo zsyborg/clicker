@@ -5,11 +5,8 @@ import dbConnect from '../../../lib/dbConnect'
 import clientPromise from '../../../lib/mongodb'
 import { MongoClient } from 'mongodb'
 import NextCors from 'nextjs-cors'
-import { createClient } from '@vercel/kv';
-import { MongoClientOptions } from 'mongodb'
+const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 
-
-// const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 
 async function listDatabases(client: MongoClient){
   const db = client.db('Clicker')
@@ -55,22 +52,11 @@ export default async function handler(
         }
       }
 
+
+
       
        
-      try {
-
-        
-    const clt = new MongoClient(MONGODB_URI, opts)
-    
-    const huntCollection = clt.db("Clicker").collection("Users")
-    // const crd = await huntCollection.find({}).toArray()
-    const crd = await huntCollection.find().sort({clicks: -1}).toArray()
-      
-
-        res.status(200).json({ success: true, data: crd })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
+     
       break
 
 ////////////////////////
@@ -85,15 +71,15 @@ export default async function handler(
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
  });
 
-        const clt = new MongoClient(MONGODB_URI)
-    const huntCollection = clt.db("Clicker").collection("Users")
-    const curruser = JSON.stringify(req.body)
-    const usr = JSON.parse(curruser)
-    const wlt = usr.wallet
+         const clt = new MongoClient(MONGODB_URI)
+     const huntCollection = clt.db("Inviter").collection("Admin")
+     const curruser = JSON.stringify(req.body)
+     const usr = JSON.parse(curruser)
+     const wlt = usr.wallet
 
-    // const getAllUsers = await huntCollection.findOne({ wallet: wlt }, { projection: { _id: 0 } })
+    const getAllUsers = await huntCollection.findOne({ wallet: wlt }, { projection: { _id: 0 } })
 
-     // Check if the user already exists
+    // Check if the user already exists
      const existingUser = await huntCollection.findOne({ wallet: wlt });
     if (existingUser) {
       res.status(201).json({ success: true, data: existingUser })
@@ -104,7 +90,7 @@ export default async function handler(
       clt.close()
     }
     // Condition to check is user exists. Create if doesn't
-    /*if (getAllUsers.wallet === wlt) {
+    if (getAllUsers.wallet === wlt) {
       console.log("User Exists")
       res.status(201).json({ success: true, data: getAllUsers, user: "User Exists" })
     } else {
@@ -114,7 +100,11 @@ export default async function handler(
       }
       console.log("User Doesn't Exists")
     }
-    */
+    
+
+   res.status(201).json({ success: true, data: txn })
+    
+
       break
 
       ////////////////////////

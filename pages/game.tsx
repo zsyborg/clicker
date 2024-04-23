@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { clusterApiUrl, Keypair } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
@@ -12,11 +12,12 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
 import axios from "axios";
 import { map } from 'rxjs/operators';
-
+import SendToken from 'components/TokenUi'
 import {convertAniBinaryToCSS} from 'ani-cursor';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fa1 } from '@fortawesome/free-solid-svg-icons'
 import { faTelegram, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { QueryResult, QueryData, QueryError } from '@supabase/supabase-js'
 import {
   airdrop,
   getCurrentGame,
@@ -25,12 +26,18 @@ import {
 
 import FAQItem from "@/components/FaqItem";
 import ExternalLink from "@/components/ExternalLink";
-import { exit } from "process";
+
+
+
+
+
+
+
 
 const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 // const MONGODB_URI='mongodb://localhost:27017/?retryWrites=true&w=majority'
-
-
+// import { createClient } from '@supabase/supabase-js'
+// import { Database, Tables, Enums, TablesInsert, TablesUpdate, Json } from '../database.types'
 
 const Home: NextPage = () => {
   const metaTitle = "Solana Clicker";
@@ -38,6 +45,9 @@ const Home: NextPage = () => {
     "Solana Clicker is an exciting ans simple clicker game to earn tokens. Just clickety click. Keep Clicking and keep earning!!!!";
   const metaAbsoluteUrl = "https://www.solclicker.io/";
   const metaImageUrl = "https://www.solclicker.io/home.png";
+
+
+  
 
   const [clicks, setClicks] = useState(0);
   const [effect, setEffect] = useState(false);
@@ -47,17 +57,19 @@ const Home: NextPage = () => {
   const [gameError, setGameError] = useState("");
   const [gameAccountPublicKey, setGameAccountPublicKey] = useState("");
   const [leaders, setLeaders] = useState<LeaderboardItem[]>([]);
-  const [data, setData] = useState([]);
+  const [sdata, setData] = useState([]);
 
   const { connected } = useWallet();
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-  const wallet = useAnchorWallet();
+  const wallet = useWallet();
   const [clickCount, setClickCount] = useState(0);
   const [totalClick, settotalClick] = useState(0);
-  const [level, setLevel] = useState(0);
+  const [level, setLevel] = useState(1);
 
-  
+
+// const supabase = createClient('https://gmitebdgjevishfmuios.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtaXRlYmRnamV2aXNoZm11aW9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTEyNTk4OTIsImV4cCI6MjAyNjgzNTg5Mn0.6gVGX2nOVst89M-5DmmdmaKORh0WlAZeaGGFeefTyBM')
+
   // async function applyCursor(selector, aniUrl) {
   //   const response = await fetch(aniUrl);
   //   const data = new Uint8Array(await response.arrayBuffer());
@@ -73,78 +85,62 @@ const Home: NextPage = () => {
   //    })
 
 
-
-
   async function handleClick() {
-    setGameError("");
-    if (wallet) {
-      // try {
-      //   await saveClick({ wallet, endpoint, gameAccountPublicKey });
-      //   setClicks(clicks + 1);
-        setEffect(true);
-        
-      // } catch (e) {
-      //   if (e instanceof Error) {
-      //     setGameError(e.message);
-      //   }
-      // }
-     
-      
-      
-      // axios.post('api/users/check', {wallet: wallet.publicKey.toBase58()})
-      // .then((response) => {
-      //   console.log(response)
-      //   setClickCount(clickCount + 1)
-      //   settotalClick(response.data.data.clicks)
-      //   console.log(response.data.data)
-      //   console.log("Total Clicks" + totalClick)
-      // })
-      // .catch((error) => {
-      //   console.log(error);
-      // });
 
-    }
+  
+    if (wallet) {
       
-     
+      
+        setEffect(true)
 
       // console.log("PATCH Clicks + " + totalClick)
 
-      
+          
+
+
+
       setClickCount(clickCount + 1)
       settotalClick(totalClick + 1)
+      
+      localStorage.setItem('clicks', clickCount.toString())
+      localStorage.setItem('level', level.toString())
+      const klick = localStorage.getItem('clicks')
+      const lvl = localStorage.getItem('level')
       // Check if the totalClicks is a multiple of 10
       if (clickCount % 10 === 0) {
         // Level up and double the required clicks for the next level
         setLevel(level + 1);
+        localStorage.setItem('level', level.toString())
 
 
 
          let clkdata = {
           wallet: wallet?.publicKey.toBase58(),
-          clicks: clickCount,
-          level: level
+          clicks: klick,
+          level: lvl
         };
-        console.log("Patched Data" + clkdata)
-        axios.patch('/api/users', clkdata)
-        .then((response) => {
-          console.log(response)
-          // settotalClick(response.data.data.clicks)
-        })
-        .catch((error) => {
-          console.log(error);
-        });
 
+
+
+        // console.log("Patched Data" + clkdata)
+        // axios.patch('/api/users', clkdata)
+        // .then((response) => {
+        //   console.log(response)
+        //   // settotalClick(response.data.data.clicks)
+        // })
+        // .catch((error) => {
+        //   console.log(error);
+        // });
+
+      
   console.log("Total Clicks " + clickCount)
   console.log("Reached Level " + level)
-}
+
+} 
+  } //if considtion
 
 
   }
-
-
-
-
-
 
 
 
@@ -169,22 +165,75 @@ const Home: NextPage = () => {
   // }, [connected, endpoint, network, wallet, gameAccountPublicKey, totalClick, level]);
 
 
-  // For leaderboard, persist expensive "retrieve all game data" via useState()
-  useMemo(() => {
 
+
+  // const driver = neo4j.driver('neo4j://localhost', neo4j.auth.basic('neo4j', 'Ajna@4028'))
+  
     
+  // async function write() {
+    
+  //   let session = driver.session({ database: 'Clicker' })
+  // try {
+  //   const result = await session.executeRead(async tx => {
+  //     return await tx.run(`
+  //       MATCH (p:Person WHERE p.name STARTS WITH $filter)
+  //       RETURN p.name AS name ORDER BY name
+  //       `, { filter: 'Al'}
+  //     )
+  //   })
+  //   console.log(
+  //     `The query ${result.summary.query.text} returned ${result.records.length} nodes.`
+  //   )
+  //   for(let record of result.records) {
+  //     console.log(`Person with name: ${record.get('name')}`)
+  //     console.log(`Available properties for this node are: ${record.keys}\n`)
+  //   }
+  // } finally {
+  //   await session.close()
+  // }
+  // }
 
-    (async function initGame() {
-      
-    if (wallet) {
 
+  
+  
+  
+  async function initGame() {
+        x
+    if (wallet.publicKey) { 
+  
       let chkdata = {
         wallet: wallet.publicKey?.toBase58(),
       };
       
+
+
       
-      
-      
+      if (level <= 10){
+        document.querySelector('meme')?.classList.remove('animate-bounce')
+      } else if (level <= 20){
+        console.log("dance20")
+      } else if(level <= 30){
+        console.log("dance30")
+      } else if(level <= 40){
+        console.log("dance40")
+      } else if(level <= 50){
+        console.log("dance50")
+      } else if(level <= 60){
+        console.log("dance2")
+      } else if(level <= 70){
+        console.log("dance2")
+      } else if(level <= 80){
+        console.log("dance2")
+      } else if(level <= 90){
+        console.log("dance2")
+      } else if(level <= 100){
+        console.log("dance2")
+      }
+
+
+      // const { data } = await supabase.from('clicker').select().returns<Database>()
+      // console.log(data)
+
       axios.post('/api/users/check', chkdata)
       .then((response: any) => {
         
@@ -193,7 +242,57 @@ const Home: NextPage = () => {
         console.log("Current Click Count = " + clickCount)
         settotalClick(response.data.data.clicks)
         setLevel(response.data.data.level)
-
+  
+        if (response.data.data === false) {
+           // Create New User
+           setIsGameReady(false);
+          console.log(("Creating a new User"))
+            let newusrdata = {
+              wallet: wallet.publicKey?.toBase58(),
+              clicks: 0,
+              level: 0
+            };
+            axios.post('/api/users', newusrdata)
+            .then((response: any) => {
+              console.log(response)
+              setIsGameReady(true);
+              return response
+            })
+            .catch((error: any) => {
+              console.log(error); 
+              
+            });
+        } else {
+      
+          axios.get('/api/users')
+          .then((response: any) => {
+            console.log(response.data.data)
+            setData(response.data.data)
+            if (response.data.data === false) {
+             setIsGameReady(false) 
+            }
+            return response.data.data
+            // data.map((item, index) => (
+            //   {item.wallet === wallet ? (
+            //     {setClickCount(item.clicks)}
+            //   ) : (
+            //     {item.wallet}
+            //   )}
+            // ))
+            
+            // if (data.wallet === wallet.publicKey.toBase58()) {
+            //   setClickCount(data.clicks)
+            //   console.log("Total Clicks" + data.clicks)
+            // }
+            
+          })
+          .catch((error: any) => {
+            console.log(error);
+            
+          });
+    
+        }
+  
         
       })
       .catch((error: any) => {
@@ -201,53 +300,12 @@ const Home: NextPage = () => {
       });
       
       
-      // Create New User
-      
-      let newusrdata = {
-        wallet: wallet.publicKey?.toBase58(),
-        clicks: 0,
-        level: 0
-      };
-      axios.post('/api/users', newusrdata)
-      .then((response: any) => {
-        console.log(response)
-        setIsGameReady(true);
-        return response
-      })
-      .catch((error: any) => {
-        console.log(error);
-        
-      });
-
-
-      
-      axios.get('/api/users')
-      .then((response: any) => {
-        console.log(response.data.data)
-        setData(response.data.data)
-        return response.data.data
-        // data.map((item, index) => (
-        //   {item.wallet === wallet ? (
-        //     {setClickCount(item.clicks)}
-        //   ) : (
-        //     {item.wallet}
-        //   )}
-        // ))
-        
-        // if (data.wallet === wallet.publicKey.toBase58()) {
-        //   setClickCount(data.clicks)
-        //   console.log("Total Clicks" + data.clicks)
-        // }
-        
-      })
-      .catch((error: any) => {
-        console.log(error);
-        
-      });
-
-
-
-
+     
+  
+  
+  
+  
+  
       
       // const gameState = await getCurrentGame({ wallet, endpoint });
       // setClicks(gameState.clicks);
@@ -265,18 +323,35 @@ const Home: NextPage = () => {
       // setSolanaExplorerLink("");
       // setGameError("");
     }
-    })();
+  
+  
+  };
+  
+    
+
+
+
+
+useEffect(() => {
+  initGame()
+},[wallet, clickCount,level])
+
+
+
+
+
+  // For leaderboard, persist expensive "retrieve all game data" via useState()
+  useEffect(() => {
     
     (async function getLeaderboardData() {
       if (wallet) {
         // setLeaders(await getLeaderboard({ wallet, endpoint }));
       }
     })();
-
     
+   
+  }, [wallet, clickCount, level]);
   
-}, []);
-
 
 
 
@@ -312,7 +387,11 @@ return (
       
 
       <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4 headbg">
-        <div className="flex-1 text-xl font-mono">SolClicker</div>
+        <div className="flex-1 text-xl font-mono">
+          <a href="/">
+            SolClicker
+          </a>
+        </div>
             <a href="https://t.me/solclicker">
             <FontAwesomeIcon width={30} icon={faTelegram} className="mr-5"/>
             </a>
@@ -324,12 +403,14 @@ return (
           </li>
         </ul>
         <div>
-          <WalletMultiButton />
+          {/*<WalletMultiButton />*/}
         </div>
         {/* <div className="badge badge-accent badge-outline flex-none w-full XXXml-2">
           <a href="#devnet">devnet</a>
         </div> */}
       </div>
+
+
 
 
 
@@ -359,8 +440,8 @@ return (
               )}
                   
             
-
-              {isGameReady && (
+<SendToken/>
+              {wallet && (
                 <div
                   onAnimationEnd={() => {
                     setEffect(false);
@@ -379,60 +460,21 @@ return (
               }}
               className="text-primary-content h-36 w-36 rounded-full"
             >
-            <img className="animate-bounce" src="/meme.png" width="200px" height="150px" />
+            <img className="animate-bounce meme" id="meme" src="/meme.png" width="200px" height="150px" />
               {/* Click Me */}
             </button>
               <h1 className="font-black text-2xl" style={{color:'black !important'}}>Number of clicks {totalClick}</h1>
-            {/* {isGameReady && (
-              <div>
-                View game{" "}
-                <a
-                  className="underline"
-                  href={solanaExplorerLink}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  details
-                </a>{" "}
-                on Solana.
-              </div>
-            )} */}
-{/* 
-            {!isConnected && (
-              <p className="p-2 text-center">
-                To play game, please click{" "}
-                <span className="font-bold">Select Wallet</span> above to choose
-                your Solana wallet.
-              </p>
-            )} */}
-
-            {/* <p>
-              See{" "}
-              <a className="underline" href="#faqs">
-                FAQs
-              </a>{" "}
-              below for more information.
-            </p> */}
-{/* 
-            {!isGameReady && isConnected && (
-              <div>
-                <p className="p-2">Game initializing...</p>
-              </div>
-            )} */}
+            
           </div>
 
-          {wallet && (
-            // <Leaderboard
-            //   leaders={leaders}
-            //   wallet={wallet.publicKey.toBase58()}
-            //   clicks={clicks}
-            // />
 
-            //////////////// 
-            // LeaderBoards
-            ////////////////
-            <div className="sm:p-10 items-center flex flex-col">
-            <p className="text-2xl blacked mb-4">Leaderboard</p>
+
+
+
+{ wallet 
+? <>
+     <div className="sm:p-10 items-center flex flex-col">
+            <p className="text-4xl text-black mb-4" style={{color:'black'}}>Leaderboard</p>
             <div className="overflow-x-auto">
               <table className="table table-zebra w-full">
                 <thead>
@@ -443,17 +485,10 @@ return (
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item:any, index:any) => (
+                  {sdata.slice(0, 5).map((item:any, index:any) => (
                     <tr key={item.wallet}>
                       <th className="text-center">{index + 1}</th>
                       <td className="text-center">
-
-                        {/* {item.wallet === wallet ? (
-                          <b>You</b>
-                          {settotalClick(item.clicks)}
-                        ) : (
-                          <p></p>
-                        )} */}
                         <p>{item.wallet}</p>
                       </td>
                       <td className="text-center">{item.clicks}</td>
@@ -463,12 +498,38 @@ return (
               </table>
             </div>
           </div>
+      </>
+: <>
+  <Spinner/>
+</>
+
+}
 
 
 
 
 
-          )}
+
+
+
+
+
+{/* 
+
+
+          {wallet && (
+             
+            // LeaderBoards
+            
+            
+
+
+
+
+
+          )} : <Spinner/> */}
+
+          
         </div>
       </div>
 

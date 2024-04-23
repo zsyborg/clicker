@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { clusterApiUrl, Keypair } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
@@ -12,7 +12,7 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
 import axios from "axios";
 import { map } from 'rxjs/operators';
-
+import SendToken from 'components/TokenUi'
 import {convertAniBinaryToCSS} from 'ani-cursor';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fa1 } from '@fortawesome/free-solid-svg-icons'
@@ -23,21 +23,33 @@ import {
   saveClick,
 } from "../lib/clicker-anchor-client";
 
+
+
+
+
+
+
+
+
+
 import FAQItem from "@/components/FaqItem";
 import ExternalLink from "@/components/ExternalLink";
-import { exit } from "process";
 
 const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 // const MONGODB_URI='mongodb://localhost:27017/?retryWrites=true&w=majority'
-
-
+// import { createClient } from '@supabase/supabase-js'
+// import { Database, Tables, Enums, TablesInsert, TablesUpdate, Json } from '../database.types'
 
 const Home: NextPage = () => {
   const metaTitle = "Solana Clicker";
   const metaDescription =
     "Solana Clicker is an exciting ans simple clicker game to earn tokens. Just clickety click. Keep Clicking and keep earning!!!!";
-  const metaAbsoluteUrl = "https://solclicker.io/";
-  const metaImageUrl = "https://solclicker.io/home.png";
+  const metaAbsoluteUrl = "https://www.solclicker.io/";
+  const metaImageUrl = "https://www.solclicker.io/home.png";
+
+
+  
+  
 
   const [clicks, setClicks] = useState(0);
   const [effect, setEffect] = useState(false);
@@ -47,20 +59,16 @@ const Home: NextPage = () => {
   const [gameError, setGameError] = useState("");
   const [gameAccountPublicKey, setGameAccountPublicKey] = useState("");
   const [leaders, setLeaders] = useState<LeaderboardItem[]>([]);
-  const [data, setData] = useState([]);
+  const [sdata, setData] = useState([]);
 
   const { connected } = useWallet();
   const network = WalletAdapterNetwork.Devnet;
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-  const wallet = useAnchorWallet();
+  const wallet = useWallet();
   const [clickCount, setClickCount] = useState(0);
   const [totalClick, settotalClick] = useState(0);
   const [level, setLevel] = useState(0);
 
-
-
-
-  
   
   // async function applyCursor(selector, aniUrl) {
   //   const response = await fetch(aniUrl);
@@ -75,212 +83,6 @@ const Home: NextPage = () => {
     
   //   applyCursor("#main", "https://www.agoracnft.io/linkselect.ani")
   //    })
-
-
-
-
-  async function handleClick() {
-    setGameError("");
-    if (wallet) {
-      // try {
-      //   await saveClick({ wallet, endpoint, gameAccountPublicKey });
-      //   setClicks(clicks + 1);
-        setEffect(true);
-        
-      // } catch (e) {
-      //   if (e instanceof Error) {
-      //     setGameError(e.message);
-      //   }
-      // }
-     
-      
-      
-      // axios.post('https://solclicker.xyzapi/users/check', {wallet: wallet.publicKey.toBase58()})
-      // .then((response) => {
-      //   console.log(response)
-      //   setClickCount(clickCount + 1)
-      //   settotalClick(response.data.data.clicks)
-      //   console.log(response.data.data)
-      //   console.log("Total Clicks" + totalClick)
-      // })
-      // .catch((error) => {
-      //   console.log(error);
-      // });
-
-    }
-      
-     
-
-      // console.log("PATCH Clicks + " + totalClick)
-
-      
-      setClickCount(clickCount + 1)
-      settotalClick(totalClick + 1)
-      // Check if the totalClicks is a multiple of 10
-      if (clickCount % 10 === 0) {
-        // Level up and double the required clicks for the next level
-        setLevel(level + 1);
-
-
-
-         let clkdata = {
-          wallet: wallet?.publicKey.toBase58(),
-          clicks: clickCount,
-          level: level
-        };
-        console.log("Patched Data" + clkdata)
-        axios.patch('https://solclicker.xyz/api/users', clkdata)
-        .then((response) => {
-          console.log(response)
-          // settotalClick(response.data.data.clicks)
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-  console.log("Total Clicks " + clickCount)
-  console.log("Reached Level " + level)
-}
-
-
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-  // useEffect(() => {
-
-
-  //   // axios.get('https://solclicker.xyz/api/users/leaders')
-  //   // .then((response: any) => {
-  //   //   console.log(data)
-
-  //   // })
-  //   // .catch((error: any) => {
-  //   //   console.log(error);
-  //   // });
-
-
-
-  // }, [connected, endpoint, network, wallet, gameAccountPublicKey, totalClick, level]);
-
-
-  // For leaderboard, persist expensive "retrieve all game data" via useState()
-  useMemo(() => {
-
-    
-
-    (async function initGame() {
-      
-    if (wallet) {
-
-      let chkdata = {
-        wallet: wallet.publicKey?.toBase58(),
-      };
-      
-      
-      
-      
-      axios.post('https://solclicker.xyz/api/users/check', chkdata)
-      .then((response: any) => {
-        
-        settotalClick(response.data.data.clicks)
-        console.log("Total Clicks = " + response.data.data.clicks)
-        console.log("Current Click Count = " + clickCount)
-        settotalClick(response.data.data.clicks)
-        setLevel(response.data.data.level)
-
-        
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
-      
-      
-      // Create New User
-      
-      let newusrdata = {
-        wallet: wallet.publicKey?.toBase58(),
-        clicks: 0,
-        level: 0
-      };
-      axios.post('https://solclicker.xyz/api/users', newusrdata)
-      .then((response: any) => {
-        console.log(response)
-        setIsGameReady(true);
-        return response
-      })
-      .catch((error: any) => {
-        console.log(error);
-        
-      });
-
-
-      
-      axios.get('https://solclicker.xyz/api/users')
-      .then((response: any) => {
-        console.log(response.data.data)
-        setData(response.data.data)
-        return response.data.data
-        // data.map((item, index) => (
-        //   {item.wallet === wallet ? (
-        //     {setClickCount(item.clicks)}
-        //   ) : (
-        //     {item.wallet}
-        //   )}
-        // ))
-        
-        // if (data.wallet === wallet.publicKey.toBase58()) {
-        //   setClickCount(data.clicks)
-        //   console.log("Total Clicks" + data.clicks)
-        // }
-        
-      })
-      .catch((error: any) => {
-        console.log(error);
-        
-      });
-
-
-
-
-      
-      // const gameState = await getCurrentGame({ wallet, endpoint });
-      // setClicks(gameState.clicks);
-      // setGameAccountPublicKey(gameState.gameAccountPublicKey);
-      // setSolanaExplorerLink(
-      //   `https://explorer.solana.com/address/${gameAccountPublicKey}/anchor-account?cluster=${network}`
-      // );
-      // setGameError(gameState.errorMessage);
-      
-    } else {
-      // setIsGameReady(false);
-      // setClicks(0);
-      // setGameAccountPublicKey("");
-      
-      // setSolanaExplorerLink("");
-      // setGameError("");
-    }
-    })();
-    
-    (async function getLeaderboardData() {
-      if (wallet) {
-        // setLeaders(await getLeaderboard({ wallet, endpoint }));
-      }
-    })();
-
-    
-  
-}, []);
-
 
 
 
@@ -315,7 +117,7 @@ return (
       </Head>
       
 
-      <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4">
+      <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4 headbg">
         <div className="flex-1 text-xl font-mono">SolClicker</div>
             <a href="https://t.me/solclicker">
             <FontAwesomeIcon width={30} icon={faTelegram} className="mr-5"/>
@@ -335,29 +137,13 @@ return (
         </div> */}
       </div>
 
-{ wallet 
-? <>
-      <img className="animate-bounce" src="/meme.png" width="200px" height="150px" />
-        <h2 className="text-5xl uppercase text-blue-800 font-bold">
-          <a href="/game">
-          Play Game
-            </a>
-        </h2>
-      </>
-: <>
-  <h2 className="text-5xl uppercase text-blue-800 font-bold">
-        
-        Connct Wallet To Play Game
-        
-        </h2>
-</>
 
-}
+
 
       <div>
-        <div className="flex-col sm:flex-row gap-5 h-full items-center hidden justify-center" style={{height:'auto'}}>
-          <div className="p-4 hidden flex-col items-center gap-3">
-            <div className="hidden flex-col items-center p-2">
+        <div className="flex-col sm:flex-row gap-5 h-full items-center flex justify-center" style={{height:'auto'}}>
+          <div className="p-4 flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center p-2">
               {isGameReady && gameError && (
                 <div className="alert alert-error shadow-lg">
                   <div>
@@ -380,66 +166,21 @@ return (
               )}
                   
             
+<SendToken/>
 
-              {isGameReady && (
-                <div
-                  onAnimationEnd={() => {
-                    setEffect(false);
-                  }}
-                  className="animate-wiggle hidden"
-                >
-                  {clickCount} clicks
-                </div>
-              )}
+              
             </div>
-            <p className="text-black font-black text-2xl">Level Reached: {level}</p>
+            <p className="font-black text-2xl" style={{color:'black !important'}}>Level Reached: {level}</p>
             <button
               // disabled={!isGameReady}
-              onClick={() => {
-                handleClick();
-              }}
+              
               className="text-primary-content h-36 w-36 rounded-full"
             >
-            <img className="animate-bounce" src="/meme.png" width="200px" height="150px" />
+            <img className="animate-bounce meme" id="meme" src="/meme.png" width="200px" height="150px" />
               {/* Click Me */}
             </button>
-              <h1 className="text-black font-black text-2xl">Number of clicks {totalClick}</h1>
-            {/* {isGameReady && (
-              <div>
-                View game{" "}
-                <a
-                  className="underline"
-                  href={solanaExplorerLink}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  details
-                </a>{" "}
-                on Solana.
-              </div>
-            )} */}
-{/* 
-            {!isConnected && (
-              <p className="p-2 text-center">
-                To play game, please click{" "}
-                <span className="font-bold">Select Wallet</span> above to choose
-                your Solana wallet.
-              </p>
-            )} */}
-
-            {/* <p>
-              See{" "}
-              <a className="underline" href="#faqs">
-                FAQs
-              </a>{" "}
-              below for more information.
-            </p> */}
-{/* 
-            {!isGameReady && isConnected && (
-              <div>
-                <p className="p-2">Game initializing...</p>
-              </div>
-            )} */}
+              <h1 className="font-black text-2xl" style={{color:'black !important'}}>Number of clicks {totalClick}</h1>
+            
           </div>
 
           {wallet && (
@@ -453,7 +194,7 @@ return (
             // LeaderBoards
             ////////////////
             <div className="sm:p-10 items-center flex flex-col">
-            <div className="text-2xl text-black mb-4">Leaderboard</div>
+            <p className="text-2xl blacked mb-4">Leaderboard</p>
             <div className="overflow-x-auto">
               <table className="table table-zebra w-full">
                 <thead>
@@ -464,7 +205,7 @@ return (
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item:any, index:any) => (
+                  {sdata.map((item:any, index:any) => (
                     <tr key={item.wallet}>
                       <th className="text-center">{index + 1}</th>
                       <td className="text-center">
@@ -502,7 +243,7 @@ return (
             <p>
               Yes, it is!!. This game is being developed on Solana
               Blockchain. It&apos;s in the form of a game with
-              very simple rules. Just keep Clicking. The wallet with most clicks wins tokens!!!!
+              very simple rules. Just keep Clicking. The wallet with most clicks wins a surprise prize!!!! the next 2 wallets will also receive our tokens as token of appreciation and hardwork of clicking!!!
             </p>
            
           </>
@@ -585,7 +326,9 @@ return (
         <FAQItem faq="What is the tokenomics?">
           <>
             &quot;Supply wiill be 1 Billion Tokens&quot;
-                      </>
+            From which 30% will be dedicated to the team
+            40% reserved for rewards & the rest 30% for Liquidity
+          </>
         </FAQItem>
         
       </footer>
