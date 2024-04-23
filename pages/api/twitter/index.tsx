@@ -1,21 +1,24 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import Card, {Cards} from '../../../models/Card'
 // const MONGODB_URI = process.env.MONGODB_URI!
 import dbConnect from '../../../lib/dbConnect'
 import clientPromise from '../../../lib/mongodb'
 import { MongoClient } from 'mongodb'
 import NextCors from 'nextjs-cors'
-import passport from 'passport';
-import { makeOAuthHeader } from "https://deno.land/x/twitter_v1_oauth/mod.ts";
+import { Client } from "twitter-api-sdk";
 
+const client = new Client("AAAAAAAAAAAAAAAAAAAAABCGtQEAAAAA%2FH1SGZ0uSeTqTLW5R776ibZCWdo%3D9HJbOem7OB7lvMk7ujPBzZH9JFhy5JZ98nJPiBmE1T4mzuqnPe");
 
 const axios = require('axios');
 // const qs = require('qs');
 
-// const client = new Client("AAAAAAAAAAAAAAAAAAAAAPZytAEAAAAAtboSrBTKCMP4LbJ%2FlSKt3oPwcFo%3DpAqJVf9ms6z9JEDzzMqefZxWppDUO7boYwtDizZpQA8qVg3JQ2");
+const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
+// const MONGODB_URI="mongodb://127.0.0.1:27017"
 
-// const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
-const MONGODB_URI="mongodb://127.0.0.1:27017"
+
+export const config = {
+  maxDuration: 10,
+};
+
 
 async function listDatabases(client: MongoClient){
   const db = client.db('Inviter')
@@ -123,36 +126,51 @@ export default async function handler(
       console.log("User Doesn't Exists")
     }
     */
-    let data = JSON.stringify({
-      'grant_type': 'client_credentials' 
-    });
+
+
+
+
+
+
+
+    // let data = JSON.stringify({
+    //   'grant_type': 'client_credentials' 
+    // });
     
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://api.twitter.com/oauth2/token',
-      headers: { 
-        'consumer_key': '7RiddfgFIESOW6VZx9srqRUdw', 
-        'consumer_secret': 'WUTR8zvPlnXPNcftESiBt5G7MWWZsHfYv9JUkTz1JeK4QAgRIJ', 
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 
-        'access_token': '1695124202053910536-hu6FZMh4YXk6mlQiHPPtL2TTsHr43F', 
-        'token_secret': '0l2KmJ0cEgR9R2vlPOBTCTvORfjnV9Vv5nj4AZ2Atgb1T', 
-        'client_id': 'Z0xHV1VrdUF4cmlycndDMGpXMUI6MTpjaQ', 
-        'client_secret': 'f9CMsJQBw5P9OpadbJxlODV1G0sN2rsfvJF9-PttpqgvipEhPe', 
-        'Authorization': 'Basic N1JpZGRmZ0ZJRVNPVzZWWng5c3JxUlVkdzpXVVRSOHp2UGxuWFBOY2Z0RVNpQnQ1RzdNV1dac0hmWXY5SlVrVHoxSmVLNFFBZ1JJSg==', 
-        'Cookie': 'guest_id=v1%3A171246219098204123; guest_id_ads=v1%3A171246219098204123; guest_id_marketing=v1%3A171246219098204123; personalization_id="v1_xzo+im0t+3gklY3EtKLmFA=="'
-      },
-      data : data
-    };
+    // let config = {
+    //   method: 'post',
+    //   maxBodyLength: Infinity,
+    //   url: 'https://api.twitter.com/oauth2/token',
+    //   headers: { 
+    //     'consumer_key': '7RiddfgFIESOW6VZx9srqRUdw', 
+    //     'consumer_secret': 'WUTR8zvPlnXPNcftESiBt5G7MWWZsHfYv9JUkTz1JeK4QAgRIJ', 
+    //     'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 
+    //     'access_token': '1695124202053910536-hu6FZMh4YXk6mlQiHPPtL2TTsHr43F', 
+    //     'token_secret': '0l2KmJ0cEgR9R2vlPOBTCTvORfjnV9Vv5nj4AZ2Atgb1T', 
+    //     'client_id': 'Z0xHV1VrdUF4cmlycndDMGpXMUI6MTpjaQ', 
+    //     'client_secret': 'f9CMsJQBw5P9OpadbJxlODV1G0sN2rsfvJF9-PttpqgvipEhPe', 
+    //     'Authorization': 'Basic N1JpZGRmZ0ZJRVNPVzZWWng5c3JxUlVkdzpXVVRSOHp2UGxuWFBOY2Z0RVNpQnQ1RzdNV1dac0hmWXY5SlVrVHoxSmVLNFFBZ1JJSg==', 
+    //     'Cookie': 'guest_id=v1%3A171246219098204123; guest_id_ads=v1%3A171246219098204123; guest_id_marketing=v1%3A171246219098204123; personalization_id="v1_xzo+im0t+3gklY3EtKLmFA=="'
+    //   },
+    //   data : data
+    // };
     
-    axios.request(config)
-    .then((response:any) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error:any) => {
-      console.log(error);
-    });
+    // axios.request(config)
+    // .then((response:any) => {
+    //   console.log(JSON.stringify(response.data));
+    // })
+    // .catch((error:any) => {
+    //   console.log(error);
+    // });
     
+
+    async function main() {
+      const tweet = await client.tweets.findTweetById("20");
+      res.status(200).json({ success: true, data: tweet })
+      // console.log(tweet);  
+    }
+    
+    main();
 
 
 
