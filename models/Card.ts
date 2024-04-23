@@ -49,4 +49,4 @@ const CardSchema = new mongoose.Schema<Cards>({
   }
 })
 
-export default mongoose.models.Card || mongoose.model<Cards>('Card', CardSchema)
+export default mongoose.models['Card'] || mongoose.model<Cards>('Card', CardSchema)

@@ -68,4 +68,4 @@ const PetSchema = new mongoose.Schema<Pets>({
   },
 })
 
-export default mongoose.models.Pet || mongoose.model<Pets>('Pet', PetSchema)
+export default mongoose.models['Pet'] || mongoose.model<Pets>('Pet', PetSchema)

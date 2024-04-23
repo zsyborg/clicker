@@ -26,6 +26,7 @@ import {
 import FAQItem from "@/components/FaqItem";
 import ExternalLink from "@/components/ExternalLink";
 import { exit } from "process";
+import Link from "next/link";
 
 const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 // const MONGODB_URI='mongodb://localhost:27017/?retryWrites=true&w=majority'
@@ -339,9 +340,10 @@ return (
 ? <>
       <img className="animate-bounce" src="/meme.png" width="200px" height="150px" />
         <h2 className="text-5xl uppercase text-blue-800 font-bold">
-          <a href="/game">
+          {/* <Link href="/game"> */}
           Play Game
-            </a>
+            {/* </Link> */}
+            
         </h2>
       </>
 : <>

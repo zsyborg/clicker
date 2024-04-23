@@ -1,27 +1,14 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState, useEffect, useMemo, useRef } from "react";
-import { clusterApiUrl, Keypair } from "@solana/web3.js";
+import { useState, useMemo } from "react";
+import { clusterApiUrl } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
-import clientPromise from '../lib/mongodb';
-import { MongoClient } from 'mongodb';
-import NextCors from 'nextjs-cors';
+import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 // import Leaderboard from "@/components/Leaderboard";
-import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
-import axios from "axios";
-import { map } from 'rxjs/operators';
-import SendToken from 'components/TokenUi'
-import {convertAniBinaryToCSS} from 'ani-cursor';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fa1 } from '@fortawesome/free-solid-svg-icons'
 import { faTelegram, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import {
-  airdrop,
-  getCurrentGame,
-  saveClick,
-} from "../lib/clicker-anchor-client";
 
 
 
@@ -166,7 +153,7 @@ return (
               )}
                   
             
-<SendToken/>
+{/* <SendToken/> */}
 
               
             </div>

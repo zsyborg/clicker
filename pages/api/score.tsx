@@ -40,7 +40,7 @@ export default async function handler(
       }
       try {
         
-    const clt = new MongoClient(MONGODB_URI)x
+    const clt = new MongoClient(MONGODB_URI)
     const huntCollection = clt.db("Grimace").collection("Users")
     const crd = await huntCollection.find({type:"card"}).toArray()
       

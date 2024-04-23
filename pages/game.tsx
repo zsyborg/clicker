@@ -1,28 +1,15 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState, useEffect, useMemo, useRef } from "react";
-import { clusterApiUrl, Keypair } from "@solana/web3.js";
+import { useState, useEffect, useMemo } from "react";
+import { clusterApiUrl } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
-import clientPromise from '../lib/mongodb';
-import { MongoClient } from 'mongodb';
-import NextCors from 'nextjs-cors';
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useWallet } from "@solana/wallet-adapter-react";
 // import Leaderboard from "@/components/Leaderboard";
-import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
+import { LeaderboardItem } from "@/lib/clicker-anchor-client";
 import axios from "axios";
-import { map } from 'rxjs/operators';
-import SendToken from 'components/TokenUi'
-import {convertAniBinaryToCSS} from 'ani-cursor';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { fa1 } from '@fortawesome/free-solid-svg-icons'
 import { faTelegram, faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { QueryResult, QueryData, QueryError } from '@supabase/supabase-js'
-import {
-  airdrop,
-  getCurrentGame,
-  saveClick,
-} from "../lib/clicker-anchor-client";
 
 import FAQItem from "@/components/FaqItem";
 import ExternalLink from "@/components/ExternalLink";
@@ -388,9 +375,9 @@ return (
 
       <div className="navbar mb-2 bg-base-300 text-base-content rounded-box sm:p-4 headbg">
         <div className="flex-1 text-xl font-mono">
-          <a href="/">
+          
             SolClicker
-          </a>
+          
         </div>
             <a href="https://t.me/solclicker">
             <FontAwesomeIcon width={30} icon={faTelegram} className="mr-5"/>
@@ -440,7 +427,7 @@ return (
               )}
                   
             
-<SendToken/>
+{/* <SendToken/> */}
               {wallet && (
                 <div
                   onAnimationEnd={() => {
@@ -500,7 +487,7 @@ return (
           </div>
       </>
 : <>
-  <Spinner/>
+  {/* <Spinner/> */}
 </>
 
 }

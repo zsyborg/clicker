@@ -9,8 +9,6 @@ import {
   SlopeWalletAdapter,
   SolflareWalletAdapter,
   TorusWalletAdapter,
-  BaseSolletWalletAdapter,
-  CloverWalletAdapter,
   Coin98WalletAdapter,
   ExodusWalletAdapter,
 
@@ -19,7 +17,7 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { clusterApiUrl } from "@solana/web3.js";
 import { useMemo } from "react";
 import {convertAniBinaryToCSS} from 'ani-cursor';
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 // Use require instead of import since order matters
 require("@solana/wallet-adapter-react-ui/styles.css");

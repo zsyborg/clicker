@@ -1,30 +1,19 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState, useEffect, useMemo } from "react";
-import { clusterApiUrl, Keypair } from "@solana/web3.js";
+import { useState, useMemo } from "react";
+import { clusterApiUrl } from "@solana/web3.js";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
-import clientPromise from '../lib/mongodb';
-import { MongoClient } from 'mongodb';
-import NextCors from 'nextjs-cors';
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 // import Leaderboard from "@/components/Leaderboard";
-import { getLeaderboard, LeaderboardItem } from "@/lib/clicker-anchor-client";
+import { LeaderboardItem } from "@/lib/clicker-anchor-client";
 import axios from "axios";
-import { map } from 'rxjs/operators';
-
-import {convertAniBinaryToCSS} from 'ani-cursor';
 
 
-import {
-  airdrop,
-  getCurrentGame,
-  saveClick,
-} from "../lib/clicker-anchor-client";
+
 
 import FAQItem from "@/components/FaqItem";
 import ExternalLink from "@/components/ExternalLink";
-import { exit } from "process";
 
 const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 // const MONGODB_URI='mongodb://localhost:27017/?retryWrites=true&w=majority'
