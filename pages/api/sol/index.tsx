@@ -20,7 +20,9 @@ async function listDatabases(client: MongoClient){
   return items
 };
 
-
+export const config = {
+  maxDuration: 10,
+};
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
