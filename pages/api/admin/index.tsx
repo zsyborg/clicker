@@ -74,12 +74,12 @@ export default async function handler(
      const huntCollection = clt.db("Inviter").collection("Admin")
      const curruser = JSON.stringify(req.body)
      const usr = JSON.parse(curruser)
-     const wlt = usr.wallet
+     const wlt = usr.tweet
 
-    const getAllUsers = await huntCollection.findOne({ wallet: wlt }, { projection: { _id: 0 } })
+    const getAllUsers = await huntCollection.findOne({ tweet: wlt }, { projection: { _id: 0 } })
 
     // Check if the user already exists
-     const existingUser = await huntCollection.findOne({ wallet: wlt });
+     const existingUser = await huntCollection.findOne({ tweet: wlt });
     if (existingUser) {
       res.status(201).json({ success: true, data: existingUser })
       clt.close()

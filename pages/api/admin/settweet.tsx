@@ -1,23 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import Card, {Cards} from '../../../models/Card'
-const MONGODB_URI = process.env.MONGODB_URI!
+// const MONGODB_URI = process.env.MONGODB_URI!
 import dbConnect from '../../../lib/dbConnect'
 import clientPromise from '../../../lib/mongodb'
 import { MongoClient } from 'mongodb'
 import NextCors from 'nextjs-cors'
-import { createClient } from '@vercel/kv';
-import { MongoClientOptions } from 'mongodb'
+const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
 
 
-// const MONGODB_URI='mongodb+srv://techzasha:ridYVCRZnC5FUDr1@dharti.ctgvhra.mongodb.net/?retryWrites=true&w=majority'
-
-async function listDatabases(client: MongoClient){
-  const db = client.db('Clicker')
-  const coll = db.collection('Users')
-  const items = coll.find()
-  // console.log(items)
-  return items
-};
+// async function listDatabases(client: MongoClient){
+//   const db = client.db('Clicker')
+//   const coll = db.collection('Users')
+//   const items = coll.find()
+//   // console.log(items)
+//   return items
+// };
 
 
 export default async function handler(
@@ -55,22 +51,11 @@ export default async function handler(
         }
       }
 
+
+
       
        
-      try {
-
-        
-    const clt = new MongoClient(MONGODB_URI, opts)
-    
-    const huntCollection = clt.db("Clicker").collection("Users")
-    // const crd = await huntCollection.find({}).toArray()
-    const crd = await huntCollection.find().sort({clicks: -1}).toArray()
-      
-
-        res.status(200).json({ success: true, data: crd })
-      } catch (error) {
-        res.status(400).json({ success: false })
-      }
+     
       break
 
 ////////////////////////
@@ -85,36 +70,25 @@ export default async function handler(
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
  });
 
-        const clt = new MongoClient(MONGODB_URI)
-    const huntCollection = clt.db("Inviter").collection("Users")
-    const curruser = JSON.stringify(req.body)
-    const usr = JSON.parse(curruser)
-    const wlt = usr.wallet
+         const clt = new MongoClient(MONGODB_URI)
+     const huntCollection = clt.db("Inviter").collection("Admin")
+     const curruser = JSON.stringify(req.body)
+     const usr = JSON.parse(curruser)
+     const wlt = usr.password
 
-    // const getAllUsers = await huntCollection.findOne({ wallet: wlt }, { projection: { _id: 0 } })
+    // const getAllUsers = await huntCollection.findOne({ password: wlt }, { projection: { _id: 0 } })
 
-     // Check if the user already exists
-     const existingUser = await huntCollection.findOne({ wallet: wlt });
+    // Check if the user already exists
+     const existingUser = await huntCollection.findOne({ password: wlt });
     if (existingUser) {
-      res.status(201).json({ success: true, data: existingUser })
+      res.status(200).json({ success: true, data: "Logged In" })
       clt.close()
     } else {
-      const crd = await huntCollection.insertOne(req.body)
-      res.status(201).json({ success: true, data: crd })
+    //   const crd = await huntCollection.insertOne(req.body)
+      res.status(401).json({ success: false })
       clt.close()
     }
-    // Condition to check is user exists. Create if doesn't
-    /*if (getAllUsers.wallet === wlt) {
-      console.log("User Exists")
-      res.status(201).json({ success: true, data: getAllUsers, user: "User Exists" })
-    } else {
-      const data = {
-        wallet: req.body.wallet,
-        click: 0
-      }
-      console.log("User Doesn't Exists")
-    }
-    */
+   
       break
 
       ////////////////////////
