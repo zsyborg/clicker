@@ -185,7 +185,7 @@ const Home: NextPage = () => {
   
   
   async function initGame() {
-        x
+        
     if (wallet.publicKey) { 
   
       let chkdata = {

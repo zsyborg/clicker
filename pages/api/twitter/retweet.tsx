@@ -70,8 +70,10 @@ export default async function handler(
     async function main() {
         // const tweet = await client.tweets.findTweetById("20");
         const retweetchecker = await client.users.findUserByUsername('zsyboy')
-        const ret = JSON.stringify(retweetchecker)
-        res.status(200).json({ success: true, data: ret })
+        const rw = retweetchecker.data.id
+        console.log(rw)
+        const rtw = await client.tweets.usersIdRetweets(rw, {tweet_id: '1783871210490634657'})
+        res.status(200).json({ success: true, data: rtw })
         // console.log(tweet);  
       }
       
